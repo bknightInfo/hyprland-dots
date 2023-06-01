@@ -38,8 +38,7 @@ install_stage=(
     slurp 
     swappy
     swww   
-    wofi 
-    wlogout 
+    wofi
     xdg-user-dirs
     xdg-desktop-portal-hyprland
     xfce4-settings
@@ -66,7 +65,6 @@ misc_stage=(
     thunar-archive-plugin  
     neofetch 
     neovim
-    nwg-look-bin 
     numlockx 
 )
 
@@ -83,7 +81,9 @@ aur_stage=(
     sddm-git 
     sddm-sugar-candy-git
     swaylock-effects
-    waybar-hyprland
+    waybar-hyprland-git
+    wlogout
+    nwg-look-bin 
 )
 
 timeshift_stage=(
