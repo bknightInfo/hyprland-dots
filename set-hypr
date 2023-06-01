@@ -34,14 +34,10 @@ install_stage=(
     pamixer 
     pavucontrol 
     brightnessctl 
-    network-manager-applet  
-    sddm-git 
-    sddm-sugar-candy-git   
+    network-manager-applet 
     slurp 
     swappy
-    swww 
-    swaylock-effects
-    waybar-hyprland  
+    swww   
     wofi 
     wlogout 
     xdg-user-dirs
@@ -84,6 +80,10 @@ aur_stage=(
     swaync
     visual-studio-code-bin 
     zsh-autocomplete-git
+    sddm-git 
+    sddm-sugar-candy-git
+    swaylock-effects
+    waybar-hyprland
 )
 
 timeshift_stage=(
