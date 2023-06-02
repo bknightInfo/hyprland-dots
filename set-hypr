@@ -36,8 +36,7 @@ install_stage=(
     brightnessctl 
     network-manager-applet 
     slurp 
-    swappy
-    swww   
+    swappy   
     wofi
     xdg-user-dirs
     xdg-desktop-portal-hyprland
@@ -83,7 +82,8 @@ aur_stage=(
     swaylock-effects
     waybar-hyprland-git
     wlogout
-    nwg-look-bin 
+    nwg-look-bin
+    swww
 )
 
 timeshift_stage=(
