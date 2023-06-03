@@ -244,6 +244,9 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
         install_software "paru" $SOFTWR 
     done
 
+    # update directories
+    xdg-user-dirs-update
+
     # Start the bluetooth service
     echo -e "$CNT - Starting the Bluetooth Service..."
     sudo systemctl enable --now bluetooth.service &>> $INSTLOG
