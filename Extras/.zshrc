@@ -47,15 +47,12 @@ zsh_add_completion "esc/conda-zsh-completion" false
 # More completions https://github.com/zsh-users/zsh-completions
 
 # Environment variables set everywhere
-export EDITOR="nano"
-export TERMINAL="alacritty"
+export EDITOR="nvim"
+export TERMINAL="kitty"
 export BROWSER="brave"
 
 # For QT Themes
 export QT_QPA_PLATFORMTHEME=qt5ct
-
-# remap caps to escape
-setxkbmap -option caps:escape
 
 #starship prompt
 eval "$(starship init zsh)"
