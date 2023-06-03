@@ -306,7 +306,6 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 
     # setup github theming
     git clone https://github.com/yeyushengfan258/Miya-icon-theme.git &>> $INSTLOG
-    ./install.sh -black &>> $INSTLOG
     Miya-icon-theme/install.sh -black  &>> $INSTLO
     rm -rf Miya-icon-theme &>> $INSTLOG
 
@@ -320,11 +319,6 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	cp -r decay-gtk/Themes/Dark-decay ~/.themes &>> $INSTLOG
 	cp -r decay-gtk/Themes/Decayce ~/.themes &>> $INSTLOG
 	rm -rf decay-gtk &>> $INSTLOG
-
-    #install spicetify
-	echo ">> installing spicetify..."
-	sudo chmod a+wr /opt/spotify &>>$INSTLOG
-	sudo chmod a+wr /opt/spotify/Apps -R &>>$INSTLOG
 
     # setup the first look and feel as dark
     xfconf-query -c xsettings -p /Net/ThemeName -s "Tokyonight-Dark-B" &>> $INSTLOG
