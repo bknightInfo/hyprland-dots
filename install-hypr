@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the software that would be inbstalled 
-#Need some prep work
+
 prep_stage=(
     hyprland
     archlinux-keyring
@@ -52,8 +52,7 @@ misc_stage=(
     feh 
     file-roller
     exa 
-    fzf 
-    glava
+    fzf
     gtk-engine-murrine
     kitty
     noto-fonts-emoji 
@@ -64,26 +63,25 @@ misc_stage=(
     thunar-archive-plugin  
     neofetch 
     neovim
-    numlockx 
 )
 
 aur_stage=(
     brave-bin
+    cava
     celluloid
-    fnm-bin 
-    swayidle
+    fnm-bin
+    mdcat 
+    nwg-look-bin
     spotify-edge
-    spicetify-cli
+    swayidle
     swaync
-    visual-studio-code-bin 
-    zsh-autocomplete-git
     sddm-git 
     sddm-sugar-candy-git
     swaylock-effects
+    swww
     waybar-hyprland-git
     wlogout
-    nwg-look-bin
-    swww
+    zsh-autocomplete-git
 )
 
 timeshift_stage=(
@@ -97,6 +95,20 @@ remove_stage=(
     xdg-desktop-portal-gnome 
     xdg-desktop-portal-gtk
     xdg-user-dirs
+)
+
+dev_stage=(
+    composer 
+    github-desktop-bin 
+    golangci-lint 
+    lazygit 
+    lua-language-server 
+    prettier 
+    npm
+    phpactor
+    php82-iconv 
+    stylua 
+    visual-studio-code-bin 
 )
 
 for str in ${myArray[@]}; do
@@ -141,7 +153,7 @@ if [ -n "$ISAUR" ]; then
 else 
     echo -e "$CWR - AUR helper was NOT located"
     while true; do
-        read -rp "$CAT Which AUR helper do you want to use, yay or paru? Enter 'y' or 'p': " choice 
+        read -rp "$CAC Which AUR helper do you want to use, yay or paru? Enter 'y' or 'p': " choice 
         case "$choice" in
             y|Y)
 				echo -e "$CWR - Installing yay from AUR"
@@ -241,7 +253,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
     # Stage AUR - AUR applications
     echo -e "$CNT - Installing AUR applications, this may take a while..."
     for SOFTWR in ${aur_stage[@]}; do
-        install_software "paru" $SOFTWR 
+        install_software $AUR $SOFTWR 
     done
 
     # update directories
@@ -352,7 +364,6 @@ if [[ $OS == "Y" || $OS == "y" ]]; then
 	sudo sed -i 's/^#GRUB_DISABLE_OS_PROBER/GRUB_DISABLE_OS_PROBER/' /etc/default/grub
 	sudo grub-mkconfig -o /boot/grub/grub.cfg
 fi
-
 
 ### Script is done ###
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to start Hyprland now? (y,n) ' HYP

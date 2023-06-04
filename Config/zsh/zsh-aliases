@@ -65,7 +65,7 @@ alias psr='paru -Ss '
 alias upall='paru -Syyu --noconfirm'
 
 #Yay skipping keys check (use at own risk)
-alias="yay -S --mflags --skipinteg " 
+alias yayskip="yay -S --mflags --skipinteg " 
 
 #nano
 alias bashrc='sudo nano ~/.bashrc'

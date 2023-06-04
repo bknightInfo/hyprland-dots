@@ -14,7 +14,7 @@
 	"wlr/workspaces",
 	"custom/middle",
 	"custom/kitty",
-	"custom/firefox",
+	"custom/brave",
 	"custom/file",
 	"custom/code",
 	"custom/spot",
@@ -22,19 +22,18 @@
         "cpu", 
         "memory", 
         "temperature",
-	"custom/rightside",
+	"custom/rightside"
         ],
     "modules-center": [
 	"custom/leftside",
 	"clock",
 	"custom/weather",
+    "custom/cava",
 	"custom/spotify",
-	"custom/rightside",
+	"custom/rightside"
         ],
     "modules-right": [
 	"custom/leftside",
-	"idle_inhibitor",
-	"custom/screenshot",
 	"custom/wallpaper",
 	"custom/keybindings",
 	"custom/updates",
@@ -43,7 +42,7 @@
 	"gamemode",
 	"tray",
 	"custom/power",
-	"custom/rightside",
+	"custom/rightside"
 	],
 
     // Modules configuration
@@ -69,13 +68,13 @@
     },
 
     "custom/leftside":{
-        "format":" ",
+        "format":" "
     },
     "custom/rightside":{
-        "format":" ",
+        "format":" "
     },
     "custom/middle":{
-        "format":" ",
+        "format":" "
     },
     "custom/kitty":{
         "format":" ",
@@ -84,6 +83,10 @@
     "custom/firefox":{
         "format":" ",
         "on-click": "firefox 2> /dev/null"
+    },
+    "custom/brave":{
+        "format":" ",
+        "on-click": "brave 2> /dev/null"
     },
     "custom/file":{
         "format":" ",
@@ -113,21 +116,35 @@
         }
     },
 
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": "",
-            "deactivated": "",
-        }
-    },
+    "custom/cava": {
+        "cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",
+        "framerate": 60,
+        "autosens": 1,
+            "sensitivity": 100,
+            "bars": 14,
+            "lower_cutoff_freq": 50,
+            "higher_cutoff_freq": 10000,
+            "method": "pulse",
+            "source": "auto",
+            "stereo": true,
+            "reverse": false,
+            "bar_delimiter": 0,
+            "monstercat": false,
+            "waves": false,
+            "noise_reduction": 0.77,
+            "input_delay": 2,
+            "format-icons" : ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" ],
+            "actions": {
+                "on-click-right": "mode"
+                }
+            },
 
     "tray": {
         "icon-size": 15,
-        "spacing": 8,
+        "spacing": 8
     },
 
     "clock": {
-        // "timezone": "America/New_York",
         "interval": 1,
         "format": "{:  %a %d %b | %I:%M %p}",
         "tooltip": true,
@@ -148,11 +165,8 @@
 
     "temperature": {
         "thermal-zone": 1,
-        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
         "critical-threshold": 90,
-        // "format-critical": "{temperatureC}°C {icon}",
         "format": " {temperatureC}°C",
-        // "format-icons": ["", "", ""]
     },
 
     "backlight": {
@@ -171,8 +185,6 @@
         "format-charging": "{capacity}%   ",
         "format-plugged": "{capacity}%   ",
         "format-alt": "{time}  {icon}",
-        // "format-good": "", // An empty format will hide the module
-        // "format-full": "",
         "format-icons": ["", "", "", "", ""]
     },
 
@@ -221,10 +233,6 @@
     "custom/wallpaper":{
         "format":" ",
         "on-click": "bash $HOME/.config/hypr/scripts/wallpaper.sh 2> /dev/null"
-    },
-    "custom/screenshot":{
-        "format":" ",
-        "on-click": "bash $HOME/.config/hypr/scripts/screenshot.sh 2> /dev/null"
     },
     "custom/spotify": {
         "interval": 1,
