@@ -123,21 +123,15 @@ alias docs='cd ~/Documents'
 alias sapps='cd /usr/share/applications'
 alias lapps='cd ~/.local/share/applications'
 
-#Best linux application
-alias matrix="unimatrix"
-
 #shortcuts for neovim
 alias v="nvim"
 alias vim="nvim"
 
-#qtile fixes
-alias qupdate='qtile cmd-obj -o widget checkupdates -f eval -a "self.update(self.poll())"'
-alias docs='cd ~/Documents/GitHub/qtile-dots-v2'
+#Docker
+alias docker-start="systemctl --user start docker-desktop"
+alias docker-stop="systemctl --user stop docker-desktop"
 
-#php laravel
-alias phpd='cd ~/Documents/projects/PHP'
-alias ibar='composer require barryvdh/laravel-debugbar --dev'
-alias serve='php artisan serve'
-alias pa='php artisan'
+#laravel
+alias sail="./vendor/bin/sail"
 
 

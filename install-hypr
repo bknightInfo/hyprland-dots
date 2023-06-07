@@ -56,7 +56,8 @@ misc_stage=(
     gtk-engine-murrine
     kitty
     noto-fonts-emoji 
-    papirus-icon-theme 
+    papirus-icon-theme
+    playerctl
     starship
     ttf-jetbrains-mono-nerd 
     thunar
@@ -70,6 +71,7 @@ aur_stage=(
     cava
     celluloid
     fnm-bin
+    grimblast
     mdcat 
     nwg-look-bin
     spotify-edge
@@ -84,32 +86,12 @@ aur_stage=(
     zsh-autocomplete-git
 )
 
-timeshift_stage=(
-    duf
-    os-prober
-    timeshift-bin 
-    timeshift-autosnap
-)
-  
 remove_stage=(
     xdg-desktop-portal-gnome 
     xdg-desktop-portal-gtk
     xdg-user-dirs
 )
 
-dev_stage=(
-    composer 
-    github-desktop-bin 
-    golangci-lint 
-    lazygit 
-    lua-language-server 
-    prettier 
-    npm
-    phpactor
-    php82-iconv 
-    stylua 
-    visual-studio-code-bin 
-)
 
 for str in ${myArray[@]}; do
   echo $str
@@ -153,7 +135,7 @@ if [ -n "$ISAUR" ]; then
 else 
     echo -e "$CWR - AUR helper was NOT located"
     while true; do
-        read -rp "$CAC Which AUR helper do you want to use, yay or paru? Enter 'y' or 'p': " choice 
+        read -rp "$CWR Which AUR helper do you want to use, yay or paru? Enter 'y' or 'p': " choice 
         case "$choice" in
             y|Y)
 				echo -e "$CWR - Installing yay from AUR"
@@ -198,10 +180,7 @@ install_software() {
 		;;
 	yay)
 		APP="yay"
-		;;
-	esac
-	if $APP -Q $2 &>>/dev/null; then
-		echo -e "$COK - $2 is already installed."
+		;;mkdir -p ~/Pictures/Screenshotslready installed."
 	else
 		# no package found so installing
 		echo -e "$CNT - Now installing $2 ..."
@@ -295,6 +274,8 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     mkdir -p ~/.local/share/applications
 	cp -r $SCRIPT_DIR/Extras/*.desktop ~/.local/share/applications &>>$INSTLOG
 
+    mkdir -p ~/Pictures/Screenshots
+
     # Copy the SDDM theme
     echo -e "$CNT - Setting up the login screen."
     sudo cp -R Extras/sdt /usr/share/sddm/themes/
@@ -305,7 +286,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     if [ -d "$WLDIR" ]; then
         echo -e "$COK - $WLDIR found"
     else
-        echo -e "$CWR - $WLDIR NOT found, creating..."
+        echo -e "$CWR - $WLDIR NOT fgrimblastound, creating..."
         sudo mkdir $WLDIR
     fi 
 
@@ -321,7 +302,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 
     # setup github theming
     git clone https://github.com/yeyushengfan258/Miya-icon-theme.git &>> $INSTLOG
-    Miya-icon-theme/install.sh -black  &>> $INSTLO
+    Miya-icon-theme/install.sh -black  &>> $INSTLOG
     rm -rf Miya-icon-theme &>> $INSTLOG
 
     git clone https://github.com/Fausto-Korpsvart/Tokyo-Night-GTK-Theme.git &>> $INSTLOG
@@ -352,17 +333,6 @@ if [[ $STAR == "Y" || $STAR == "y" ]]; then
     echo -e '\neval "$(starship init bash)"' >> ~/.bashrc
     echo -e "$CNT - copying starship config file to ~/.config ..."
     cp Extras/starship.toml ~/.config/
-fi
-
-### Install Os Prober ###
-read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you like to OS Prober(Only need for dual doat systems)? (y,n) ' OS
-if [[ $OS == "Y" || $OS == "y" ]]; then
-    for SOFTWR in ${timeshift_stage[@]}; do
-        install_software "paru" $SOFTWR 
-    done
-	#append OS prober
-	sudo sed -i 's/^#GRUB_DISABLE_OS_PROBER/GRUB_DISABLE_OS_PROBER/' /etc/default/grub
-	sudo grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
 ### Script is done ###

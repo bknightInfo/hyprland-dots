@@ -4,101 +4,65 @@
     "height": 32, // Waybar height (to be removed for auto height)
     "spacing": 0, // Gaps between modules (4px)
     "width": 3410,
-    "margin-top": 6,
+    "margin-top": 3,
     "margin-bottom": -12,
 
     // Choose the order of the modules
     "modules-left": [
-	"custom/leftside",
-	"custom/launcher",
-	"wlr/workspaces",
-	"custom/middle",
-	"custom/kitty",
-	"custom/brave",
-	"custom/file",
-	"custom/code",
-	"custom/spot",
-	"custom/middle",
+        "custom/leftside",
+        "custom/launcher",
+        "wlr/workspaces",
         "cpu", 
         "memory", 
         "temperature",
-	"custom/rightside"
+        "custom/rightside"
         ],
     "modules-center": [
-	"custom/leftside",
-	"clock",
-	"custom/weather",
-    "custom/cava",
-	"custom/spotify",
-	"custom/rightside"
+        "custom/leftside",
+        "hyprland/window",
+        "custom/cava",
+        "custom/spotify",
+        "custom/rightside"
         ],
     "modules-right": [
-	"custom/leftside",
-	"custom/wallpaper",
-	"custom/keybindings",
-	"custom/updates",
-	"network",
-	"pulseaudio",
-	"gamemode",
-	"tray",
-	"custom/power",
-	"custom/rightside"
+        "custom/leftside",
+        "custom/wallpaper",
+        "custom/keybindings",
+        "custom/updates",
+        "pulseaudio",
+        "gamemode",
+        "clock",
+        "custom/weather",
+        "custom/power",
+        "custom/rightside"
 	],
 
     // Modules configuration
     "wlr/workspaces": {
-        "all-outputs": true,
+        "all-outputs": false,
         "sort-by-number": true,
         "on-click": "activate",
-        "sort-by-number": true,
         "on-scroll-up": "hyprctl dispatch workspace e+1",
         "on-scroll-down": "hyprctl dispatch workspace e-1",
-        "format": "{name}: {icon}  ",
+        "format": "{icon}",
         "format-icons": {
             "urgent": "",
             "active": "",
-            "default": "",
+            "default": ""
         },
+        "persistent_workspaces": {
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": "",
+            "5": ""
+        }
     },
 
     "custom/launcher":{
-        "format": " ",
+        "format": "",
         "on-click": "$HOME/.config/waybar/scripts/menu",
         "on-click-right": "killall wofi"
-    },
-
-    "custom/leftside":{
-        "format":" "
-    },
-    "custom/rightside":{
-        "format":" "
-    },
-    "custom/middle":{
-        "format":" "
-    },
-    "custom/kitty":{
-        "format":" ",
-        "on-click": "kitty 2> /dev/null"
-    },
-    "custom/firefox":{
-        "format":" ",
-        "on-click": "firefox 2> /dev/null"
-    },
-    "custom/brave":{
-        "format":" ",
-        "on-click": "brave 2> /dev/null"
-    },
-    "custom/file":{
-        "format":" ",
-        "on-click": "thunar 2> /dev/null"
-    },
-    "custom/code":{
-        "format":" ",
-        "on-click": "vscodium 2> /dev/null"
-    },
-    "custom/spot":{
-        "format":" ",
-        "on-click": "$HOME/bin/spot-play.sh 2> /dev/null"
     },
 
     "hyprland/window": {
@@ -117,7 +81,7 @@
     },
 
     "custom/cava": {
-        "cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",
+      //  "cava_config": "~/.config/cava/cava.conf",
         "framerate": 60,
         "autosens": 1,
             "sensitivity": 100,
@@ -137,7 +101,7 @@
             "actions": {
                 "on-click-right": "mode"
                 }
-            },
+    },
 
     "tray": {
         "icon-size": 15,
@@ -228,18 +192,22 @@
         "exec": "checkupdates | wc -l",
         "exec-if": "[[ $(checkupdates | wc -l) != 0 ]]",
         "interval": 15,
-        "on-click": "alacritty -e paru -Syu && notify-send 'The system has been updated' "
+        "on-click": "kitty -e paru -Syu && notify-send 'The system has been updated' "
     },
     "custom/wallpaper":{
         "format":" ",
         "on-click": "bash $HOME/.config/hypr/scripts/wallpaper.sh 2> /dev/null"
     },
     "custom/spotify": {
+        "format": "<span size='large' rise='-1pt'></span>  <span color='#f5e0dc'>{}</span>",
+        "max-length": 60,
         "interval": 1,
         "return-type": "json",
-        "exec": "~/.config/waybar/scripts/spotify.sh",
-        "exec-if": "pgrep spotify",
-        "escape": true
+        "exec": "$HOME/.config/waybar/scripts/spotify-metadata.sh",
+        "on-click": "playerctl -p spotify play-pause",
+        "on-click-right": "killall spotify",
+        "on-scroll-up": "playerctl -p spotify next",
+        "on-scroll-down": "playerctl -p spotify previous"
     },
     "custom/weather": {
         "format": "{}",
