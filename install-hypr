@@ -183,7 +183,7 @@ install_software() {
 		;;
 	esac
 	if $APP -Q $2 &>>/dev/null; then
-		echo -e "$COK - $2 is already installed.		
+		echo -e "$COK - $2 is already installed."		
 	else
 		# no package found so installing
 		echo -e "$CNT - Now installing $2 ..."
