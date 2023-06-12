@@ -180,7 +180,10 @@ install_software() {
 		;;
 	yay)
 		APP="yay"
-		;;mkdir -p ~/Pictures/Screenshotslready installed."
+		;;
+	esac
+	if $APP -Q $2 &>>/dev/null; then
+		echo -e "$COK - $2 is already installed.		
 	else
 		# no package found so installing
 		echo -e "$CNT - Now installing $2 ..."
@@ -306,14 +309,14 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     rm -rf Miya-icon-theme &>> $INSTLOG
 
     git clone https://github.com/Fausto-Korpsvart/Tokyo-Night-GTK-Theme.git &>> $INSTLOG
-    cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Dark-B ~/.themes/ &>> $INSTLOG
-	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Moon-B ~/.themes/ &>> $INSTLOG
-	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Storm-B ~/.themes/ &>> $INSTLOG
+    cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Dark-B $XDG_DATA_HOME/themes/ &>> $INSTLOG
+	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Moon-B $XDG_DATA_HOME/themes/ &>> $INSTLOG
+	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Storm-B $XDG_DATA_HOME/themes/ &>> $INSTLOG
     rm -rf Tokyo-Night-GTK-Theme &>> $INSTLOG
 
     git clone https://github.com/decaycs/decay-gtk &>> $INSTLOG
-	cp -r decay-gtk/Themes/Dark-decay ~/.themes &>> $INSTLOG
-	cp -r decay-gtk/Themes/Decayce ~/.themes &>> $INSTLOG
+	cp -r decay-gtk/Themes/Dark-decay $XDG_DATA_HOME/themes &>> $INSTLOG
+	cp -r decay-gtk/Themes/Decayce $XDG_DATA_HOME/themes &>> $INSTLOG
 	rm -rf decay-gtk &>> $INSTLOG
 
     # setup the first look and feel as dark
