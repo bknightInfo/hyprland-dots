@@ -110,7 +110,6 @@ development_stage=(
     prettier  
     npm 
     yarn
-    visual-studio-code-bin
 )
 
 
@@ -394,7 +393,7 @@ if [[ $APPS == "Y" || $APPS == "y" ]]; then
     echo -e "$CNT - Installing AUR applications, this may take a while..."
     for SOFTWR in ${application_stage[@]}; do
         install_software $AUR $SOFTWR 
-        if [[ SOFTWR == "makemkv" ]]
+        if [[ SOFTWR == "makemkv" ]]; then
             echo -e "\n$CNT - to fix MakeMKV to the following. \n1. login as root 'su -l'\n2. run the following command 'echo sg > /etc/modules-load.d/sg.conf'"
         fi
     done
