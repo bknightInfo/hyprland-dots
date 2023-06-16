@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Define the software that would be inbstalled 
+# Define the software that would be installed 
 
+#system packages
 prep_stage=(
     hyprland
-    archlinux-keyring
     qt5-wayland 
     qt5ct
     qt6-wayland 
@@ -17,13 +17,10 @@ prep_stage=(
     gcc12 
     wl-clipboard 
     cliphist
-    python-pip 
-    python-requests 
     pacman-contrib
     wget
 )
 
-#the main packages
 install_stage=(  
     bluez 
     bluez-utils 
@@ -49,16 +46,19 @@ install_stage=(
 misc_stage=(
     btop
     capitaine-cursors
+    celluloid
     feh 
     file-roller
     exa 
     fzf
     gtk-engine-murrine
     kitty
+    mdcat
     noto-fonts-emoji 
     papirus-icon-theme
     playerctl
     starship
+    swayidle
     ttf-jetbrains-mono-nerd 
     thunar
     thunar-archive-plugin  
@@ -67,17 +67,12 @@ misc_stage=(
 )
 
 aur_stage=(
-    brave-bin
-    cava
-    celluloid
     fnm-bin
-    grimblast
-    mdcat 
+    grimblast 
     nwg-look-bin
-    spotify-edge
-    swayidle
     swaync
-    sddm-git 
+    sddm-git
+    sddm-config-editor-git 
     sddm-sugar-candy-git
     swaylock-effects
     swww
@@ -90,6 +85,32 @@ remove_stage=(
     xdg-desktop-portal-gnome 
     xdg-desktop-portal-gtk
     xdg-user-dirs
+)
+
+#custom applications
+application_stage=(
+    brave-bin
+    cava
+    firefox
+    filezilla
+    gnome_boxes
+    libreoffice-fresh
+    makemkv
+    spotify-edge
+)
+
+development_stage=(
+    composer 
+    php82-iconv
+    vscodium-bin 
+    vscodium-bin-marketplace
+    github-desktop-bin 
+    lazygit 
+    phpactor
+    prettier  
+    npm 
+    yarn
+    visual-studio-code-bin
 )
 
 
@@ -135,7 +156,7 @@ if [ -n "$ISAUR" ]; then
 else 
     echo -e "$CWR - AUR helper was NOT located"
     while true; do
-        read -rp "$CWR Which AUR helper do you want to use, yay or paru? Enter 'y' or 'p': " choice 
+        read -rp "$CAT Which AUR helper do you want to use, yay or paru? Enter 'y' or 'p': " choice 
         case "$choice" in
             y|Y)
 				echo -e "$CWR - Installing yay from AUR"
@@ -309,14 +330,13 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     rm -rf Miya-icon-theme &>> $INSTLOG
 
     git clone https://github.com/Fausto-Korpsvart/Tokyo-Night-GTK-Theme.git &>> $INSTLOG
-    cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Dark-B $XDG_DATA_HOME/themes/ &>> $INSTLOG
-	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Moon-B $XDG_DATA_HOME/themes/ &>> $INSTLOG
-	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Storm-B $XDG_DATA_HOME/themes/ &>> $INSTLOG
+    cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Dark-B ~/.local/share/themes/ &>> $INSTLOG
+	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Storm-B ~/.local/share/themes/ &>> $INSTLOG
     rm -rf Tokyo-Night-GTK-Theme &>> $INSTLOG
 
     git clone https://github.com/decaycs/decay-gtk &>> $INSTLOG
-	cp -r decay-gtk/Themes/Dark-decay $XDG_DATA_HOME/themes &>> $INSTLOG
-	cp -r decay-gtk/Themes/Decayce $XDG_DATA_HOME/themes &>> $INSTLOG
+	cp -r decay-gtk/Themes/Dark-decay ~/.local/share/themes/ &>> $INSTLOG
+	cp -r decay-gtk/Themes/Decayce ~/.local/share/themes/ &>> $INSTLOG
 	rm -rf decay-gtk &>> $INSTLOG
 
     # setup the first look and feel as dark
@@ -337,11 +357,47 @@ if [[ $STAR == "Y" || $STAR == "y" ]]; then
     echo -e "$CNT - copying starship config file to ~/.config ..."
     cp Extras/starship.toml ~/.config/
 fi
+read -n1 -rep $'[\e[1;33mACTION\e[0m] - Install dev environment(PHP development)? [y/n] ' DEVAPP
+if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
+	echo -e "\n$CNT - Installing Dev applications, this may take a while..."
+    for SOFTWR in ${development_stage[@]}; do
+        install_software $AUR $SOFTWR 
+    done
 
-### Script is done ###
-read -rep $'[\e[1;33mACTION\e[0m] - Would you like to start Hyprland now? (y,n) ' HYP
-if [[ $HYP == "Y" || $HYP == "y" ]]; then
-    exec sudo systemctl start sddm &>> $INSTLOG
-else
-    exit
+	#PHP plugin 
+	yarn global add prettier @prettier/plugin-php
+
+	#phpstan -- currently not wotking in the aur
+	wget https://github.com/phpstan/phpstan/releases/download/1.10.14/phpstan.phar
+	sudo mkdir -p /usr/share/webapps/bin
+	sudo cp phpstan.phar /usr/share/webapps/bin/
+	sudo chmod 755 /usr/share/webapps/bin/phpstan.phar
+	sudo ln -s /usr/share/webapps/bin/phpstan.phar /usr/bin/phpstan
+	rm phpstan.phar
+
+	#php coding libraries
+	wget -O phpcbf.phar https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar &>>$INSTLOG
+	chmod a+x phpcbf.phar
+	sudo mv phpcbf.phar /usr/local/bin/phpcbf
+
+	sudo sed -i 's/^;extension=mysqli/extension=mysqli/' /etc/php/php.ini &>>$INSTLOG
+	sudo sed -i 's/^;extension=pdo_mysql/extension=pdo_mysql/' /etc/php/php.ini &>>$INSTLOG
+	sudo sed -i 's/^;extension=iconv/extension=iconv/' /etc/php/php.ini &>>$INSTLOG
 fi
+
+# Remove orphan files
+sudo pacman -Rns $(pacman -Qtdq)
+
+### Install the custom application ###
+read -rep $'[\e[1;33mACTION\e[0m] - Would you to install custom applications(y,n) ' APPS
+if [[ $APPS == "Y" || $APPS == "y" ]]; then
+    echo -e "$CNT - Installing AUR applications, this may take a while..."
+    for SOFTWR in ${application_stage[@]}; do
+        install_software $AUR $SOFTWR 
+        if [[ SOFTWR == "makemkv" ]]
+            echo -e "\n$CNT - to fix MakeMKV to the following. \n1. login as root 'su -l'\n2. run the following command 'echo sg > /etc/modules-load.d/sg.conf'"
+        fi
+    done
+fi
+
+echo -e "\n$CNT - Reboot to finish installation"

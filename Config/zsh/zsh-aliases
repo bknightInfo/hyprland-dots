@@ -67,15 +67,6 @@ alias upall='paru -Syyu --noconfirm'
 #Yay skipping keys check (use at own risk)
 alias yayskip="yay -S --mflags --skipinteg " 
 
-#nano
-alias bashrc='sudo nano ~/.bashrc'
-alias nsddm='sudo nano /etc/sddm.conf'
-alias pconf='sudo nano /etc/pacman.conf'
-alias mkpkg='sudo nano /etc/makepkg.conf'
-alias ngrub='sudo nano /etc/default/grub'
-alias smbconf='sudo nano /etc/samba/smb.conf'
-alias nmirrorlist='sudo nano /etc/pacman.d/mirrorlist'
-
 #cd/ aliases
 alias home='cd ~'
 alias etc='cd /etc/'
@@ -127,11 +118,24 @@ alias lapps='cd ~/.local/share/applications'
 alias v="nvim"
 alias vim="nvim"
 
-#Docker
-alias docker-start="systemctl --user start docker-desktop"
-alias docker-stop="systemctl --user stop docker-desktop"
+#development aliases
+alias phpd='cd ~/Documents/Development'
 
-#laravel
-alias sail="./vendor/bin/sail"
-
+#laravel alias
+alias pa='php artisan'
+alias serve='php artisan serve'
+alias pam='php artisan migrate'
+alias pamf='php artisan migrate:fresh'
+alias pamm='php artisan make:migration'
+alias model='php artisan make:model'
+alias cntrl='php artisan make:controller'
+alias policy='php artisan make:policy'
+alias middleware='php artisan make:middleware'
+alias routes='php artisan route:list'
+alias wip='git add . && git commit -m "wip" && git push'
+alias gst='git status'
+alias ni='npm install'
+alias watch='npm run watch'
+alias dev='npm run dev'
+alias cr='composer require'
 
