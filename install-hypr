@@ -1,121 +1,121 @@
 #!/bin/bash
 
-# Define the software that would be installed 
+# Define the software that would be installed
 
 #system packages
 prep_stage=(
-    hyprland
-    qt5-wayland 
-    qt5ct
-    qt6-wayland 
-    qt6ct 
-    gtk3 
-    polkit-gnome 
-    pipewire 
-    wireplumber 
-    jq 
-    gcc12 
-    wl-clipboard 
-    cliphist
-    pacman-contrib
-    wget
+	hyprland
+	qt5-wayland
+	qt5ct
+	qt6-wayland
+	qt6ct
+	gtk3
+	polkit-gnome
+	pipewire
+	wireplumber
+	jq
+	gcc12
+	wl-clipboard
+	cliphist
+	pacman-contrib
+	wget
 )
 
-install_stage=(  
-    bluez 
-    bluez-utils 
-    blueman
-    grim 
-    gvfs
-    mako 
-    pamixer 
-    pavucontrol 
-    brightnessctl 
-    network-manager-applet 
-    slurp 
-    swappy   
-    wofi
-    xdg-user-dirs
-    xdg-desktop-portal-hyprland
-    xfce4-settings
-    zsh 
-    zsh-completions 
-    zsh-syntax-highlighting
+install_stage=(
+	bluez
+	bluez-utils
+	blueman
+	grim
+	gvfs
+	mako
+	pamixer
+	pavucontrol
+	brightnessctl
+	network-manager-applet
+	slurp
+	swappy
+	wofi
+	xdg-user-dirs
+	xdg-desktop-portal-hyprland
+	xfce4-settings
+	zsh
+	zsh-completions
+	zsh-syntax-highlighting
 )
 
 misc_stage=(
-    btop
-    capitaine-cursors
-    celluloid
-    feh 
-    file-roller
-    exa 
-    fzf
-    gtk-engine-murrine
-    kitty
-    mdcat
-    noto-fonts-emoji 
-    papirus-icon-theme
-    playerctl
-    starship
-    swayidle
-    ttf-jetbrains-mono-nerd 
-    thunar
-    thunar-archive-plugin  
-    neofetch 
-    neovim
+	btop
+	capitaine-cursors
+	celluloid
+	feh
+	file-roller
+	exa
+	fzf
+	gtk-engine-murrine
+	kitty
+	mdcat
+	noto-fonts-emoji
+	papirus-icon-theme
+	piper
+	playerctl
+	starship
+	swayidle
+	ttf-jetbrains-mono-nerd
+	thunar
+	thunar-archive-plugin
+	neofetch
+	neovim
 )
 
 aur_stage=(
-    fnm-bin
-    grimblast 
-    nwg-look-bin
-    swaync
-    sddm-git
-    sddm-config-editor-git 
-    sddm-sugar-candy-git
-    swaylock-effects
-    swww
-    waybar-hyprland-git
-    wlogout
-    zsh-autocomplete-git
+	fnm-bin
+	grimblast
+	nwg-look-bin
+	swaync
+	sddm-git
+	sddm-config-editor-git
+	sddm-sugar-candy-git
+	swaylock-effects
+	swww
+	waybar-hyprland-git
+	wlogout
+	zsh-autocomplete-git
 )
 
 remove_stage=(
-    xdg-desktop-portal-gnome 
-    xdg-desktop-portal-gtk
-    xdg-user-dirs
+	xdg-desktop-portal-gnome
+	xdg-desktop-portal-gtk
+	xdg-user-dirs
 )
 
 #custom applications
 application_stage=(
-    brave-bin
-    cava
-    firefox
-    filezilla
-    gnome_boxes
-    libreoffice-fresh
-    makemkv
-    spotify-edge
+	brave-bin
+	cava
+	firefox
+	filezilla
+	gnome_boxes
+	libreoffice-fresh
+	makemkv
+	spotify-edge
 )
 
 development_stage=(
-    composer 
-    php82-iconv
-    vscodium-bin 
-    vscodium-bin-marketplace
-    github-desktop-bin 
-    lazygit 
-    phpactor
-    prettier  
-    npm 
-    yarn
-    visual-studio-code-bin
+	composer
+	php82-iconv
+	vscodium-bin
+	vscodium-bin-marketplace
+	github-desktop-bin
+	lazygit
+	phpactor
+	prettier
+	npm
+	yarn
+	visual-studio-code-bin
 )
 
-
 for str in ${myArray[@]}; do
-  echo $str
+	echo $str
 done
 
 # set some colors
@@ -134,13 +134,12 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 
 # function that would show a progress bar to the user
 show_progress() {
-    while ps | grep $1 &> /dev/null;
-    do
-        echo -n "."
-        sleep 2
-    done
-    echo -en "Done!\n"
-    sleep 2
+	while ps | grep $1 &>/dev/null; do
+		echo -n "."
+		sleep 2
+	done
+	echo -en "Done!\n"
+	sleep 2
 }
 
 # clear the screen
@@ -151,41 +150,41 @@ clear
 ISAUR=$(command -v yay || command -v paru)
 
 if [ -n "$ISAUR" ]; then
-    echo -e "$COK - AUR helper was located, moving on."
-    AUR=${ISAUR##*/}
-else 
-    echo -e "$CWR - AUR helper was NOT located"
-    while true; do
-        read -rp "$CAT Which AUR helper do you want to use, yay or paru? Enter 'y' or 'p': " choice 
-        case "$choice" in
-            y|Y)
-				echo -e "$CWR - Installing yay from AUR"
-                git clone https://aur.archlinux.org/yay-bin.git &>>$INSTLOG
-                cd yay-bin &>>$INSTLOG
-                makepkg -si --noconfirm &>>$INSTLOG
-				cd $SCRIPT_DIR
-				rm -rf yay-bin &>>$INSTLOG
-				echo -e "$COK - Yay installed."
-				AUR="yay"
-                break
-                ;;
-            p|P)
-                echo -e "$CWR - Installing Paru from AUR"
-                git clone https://aur.archlinux.org/paru-bin.git &>>$INSTLOG
-                cd paru-bin &>>$INSTLOG
-                makepkg -si --noconfirm &>>$INSTLOG
-				cd $SCRIPT_DIR
-				rm -rf paru-bin &>>$INSTLOG
-				echo -e "$COK - Paru installed."
-				AUR="paru"
-                break
-                ;;
-            *)
-				echo -e "$CER - Invalid choice. Please enter 'y' or 'p'\n"
-                continue
-                ;;
-        esac
-    done
+	echo -e "$COK - AUR helper was located, moving on."
+	AUR=${ISAUR##*/}
+else
+	echo -e "$CWR - AUR helper was NOT located"
+	while true; do
+		read -rp "$CAT Which AUR helper do you want to use, yay or paru? Enter 'y' or 'p': " choice
+		case "$choice" in
+		y | Y)
+			echo -e "$CWR - Installing yay from AUR"
+			git clone https://aur.archlinux.org/yay-bin.git &>>$INSTLOG
+			cd yay-bin &>>$INSTLOG
+			makepkg -si --noconfirm &>>$INSTLOG
+			cd $SCRIPT_DIR
+			rm -rf yay-bin &>>$INSTLOG
+			echo -e "$COK - Yay installed."
+			AUR="yay"
+			break
+			;;
+		p | P)
+			echo -e "$CWR - Installing Paru from AUR"
+			git clone https://aur.archlinux.org/paru-bin.git &>>$INSTLOG
+			cd paru-bin &>>$INSTLOG
+			makepkg -si --noconfirm &>>$INSTLOG
+			cd $SCRIPT_DIR
+			rm -rf paru-bin &>>$INSTLOG
+			echo -e "$COK - Paru installed."
+			AUR="paru"
+			break
+			;;
+		*)
+			echo -e "$CER - Invalid choice. Please enter 'y' or 'p'\n"
+			continue
+			;;
+		esac
+	done
 fi
 
 # function that will test for a package and if not found it will attempt to install it
@@ -204,7 +203,7 @@ install_software() {
 		;;
 	esac
 	if $APP -Q $2 &>>/dev/null; then
-		echo -e "$COK - $2 is already installed."		
+		echo -e "$COK - $2 is already installed."
 	else
 		# no package found so installing
 		echo -e "$CNT - Now installing $2 ..."
@@ -232,139 +231,140 @@ remove_software() {
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
 if [[ $INST == "Y" || $INST == "y" ]]; then
 
-    # Prep Stage - Bunch of needed items
-    echo -e "$CNT - Prep Stage - Installing needed components, this may take a while..."
-    for SOFTWR in ${prep_stage[@]}; do
-        install_software "pacman" $SOFTWR 
-    done
+	# Prep Stage - Bunch of needed items
+	echo -e "$CNT - Prep Stage - Installing needed components, this may take a while..."
+	for SOFTWR in ${prep_stage[@]}; do
+		install_software "pacman" $SOFTWR
+	done
 
-    #fix needed for waybar-hyprland
-    export CC=gcc-12 CXX=g++-12
+	#fix needed for waybar-hyprland
+	export CC=gcc-12 CXX=g++-12
 
-    # Stage 1 - main components
-    echo -e "$CNT - Installing main components, this may take a while..."
-    for SOFTWR in ${install_stage[@]}; do
-        install_software "pacman" $SOFTWR 
-    done
+	# Stage 1 - main components
+	echo -e "$CNT - Installing main components, this may take a while..."
+	for SOFTWR in ${install_stage[@]}; do
+		install_software "pacman" $SOFTWR
+	done
 
-    # Stage 2 - main applications
-    echo -e "$CNT - Installing misc applications, this may take a while..."
-    for SOFTWR in ${misc_stage[@]}; do
-        install_software "pacman" $SOFTWR 
-    done
+	# Stage 2 - main applications
+	echo -e "$CNT - Installing misc applications, this may take a while..."
+	for SOFTWR in ${misc_stage[@]}; do
+		install_software "pacman" $SOFTWR
+	done
 
-    # Stage AUR - AUR applications
-    echo -e "$CNT - Installing AUR applications, this may take a while..."
-    for SOFTWR in ${aur_stage[@]}; do
-        install_software $AUR $SOFTWR 
-    done
+	# Stage AUR - AUR applications
+	echo -e "$CNT - Installing AUR applications, this may take a while..."
+	for SOFTWR in ${aur_stage[@]}; do
+		install_software $AUR $SOFTWR
+	done
 
-    # update directories
-    xdg-user-dirs-update
+	# update directories
+	xdg-user-dirs-update
 
-    # Start the bluetooth service
-    echo -e "$CNT - Starting the Bluetooth Service..."
-    sudo systemctl enable --now bluetooth.service &>> $INSTLOG
-    sleep 2
+	# Start the bluetooth service
+	echo -e "$CNT - Starting the Bluetooth Service..."
+	sudo systemctl enable --now bluetooth.service &>>$INSTLOG
+	sleep 2
 
-    # Enable the sddm login manager service
-    echo -e "$CNT - Enabling the SDDM Service..."
-    sudo systemctl enable sddm &>> $INSTLOG
-    sleep 2
-    
-    # Stage AUR - AUR applications
-    echo -e "$CNT - removing unwanted applications"
-    for SOFTWR in ${remove_stage[@]}; do
-        remove_software "pacman" $SOFTWR 
-    done
+	# Enable the sddm login manager service
+	echo -e "$CNT - Enabling the SDDM Service..."
+	sudo systemctl enable sddm &>>$INSTLOG
+	sleep 2
+
+	# Stage AUR - AUR applications
+	echo -e "$CNT - removing unwanted applications"
+	for SOFTWR in ${remove_stage[@]}; do
+		remove_software "pacman" $SOFTWR
+	done
 fi
 
 ### Copy Config Files ###
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to copy config files? (y,n) ' CFG
 if [[ $CFG == "Y" || $CFG == "y" ]]; then
-    echo -e "$CNT - Copying config files..."
+	echo -e "$CNT - Copying config files..."
 
-    # copy the defaults config
-    cp -R Config/* ~/.config/ &>>$INSTLOG
+	# copy the defaults config
+	cp -R Config/* ~/.config/ &>>$INSTLOG
 
 	#copy zsh core file
 	chsh -s $(which zsh)
 	cp Extras/.zshrc ~/
 
-    # stage the .desktop file
-    sudo mv Extras/hyprland.desktop /usr/share/wayland-sessions/ &>>$INSTLOG
+	# stage the .desktop file
+	sudo mv Extras/hyprland.desktop /usr/share/wayland-sessions/ &>>$INSTLOG
 
-    # custom desktop files
-    mkdir -p ~/.local/share/applications
+	# custom desktop files
+	mkdir -p ~/.local/share/applications
 	cp -r $SCRIPT_DIR/Extras/*.desktop ~/.local/share/applications &>>$INSTLOG
 
-    mkdir -p ~/Pictures/Screenshots
+	mkdir -p ~/Pictures/Screenshots
 
-    # Copy the SDDM theme
-    echo -e "$CNT - Setting up the login screen."
-    sudo cp -R Extras/sdt /usr/share/sddm/themes/
-    sudo chown -R $USER:$USER /usr/share/sddm/themes/sdt
-    sudo mkdir /etc/sddm.conf.d
-    echo -e "[Theme]\nCurrent=sdt" | sudo tee -a /etc/sddm.conf.d/10-theme.conf &>> $INSTLOG
-    WLDIR=/usr/share/wayland-sessions
-    if [ -d "$WLDIR" ]; then
-        echo -e "$COK - $WLDIR found"
-    else
-        echo -e "$CWR - $WLDIR NOT fgrimblastound, creating..."
-        sudo mkdir $WLDIR
-    fi 
+	# Copy the SDDM theme
+	echo -e "$CNT - Setting up the login screen."
+	sudo cp -R Extras/sdt /usr/share/sddm/themes/
+	sudo chown -R $USER:$USER /usr/share/sddm/themes/sdt
+	sudo mkdir /etc/sddm.conf.d
+	echo -e "[Theme]\nCurrent=sdt" | sudo tee -a /etc/sddm.conf.d/10-theme.conf &>>$INSTLOG
+	WLDIR=/usr/share/wayland-sessions
+	if [ -d "$WLDIR" ]; then
+		echo -e "$COK - $WLDIR found"
+	else
+		echo -e "$CWR - $WLDIR NOT fgrimblastound, creating..."
+		sudo mkdir $WLDIR
+	fi
 
 	#uncomment pacman settings
 	sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf &>>$INSTLOG
 	sudo sed -i 's/^#Color/Color/' /etc/pacman.conf &>>$INSTLOG
 	sudo sed -i '/^ParallelDownloads = .*/a ILoveCandy' /etc/pacman.conf &>>$INSTLOG
 
-    #setup atronvim config
+	#setup atronvim config
 	echo -e "$CNT - Setting up AstroNvim"
 	git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim &>>$INSTLOG
 	git clone --depth 1 https://github.com/bknightInfo/astrovim_files ~/.config/nvim/lua/user &>>$INSTLOG
 
-    # setup github theming
-    git clone https://github.com/yeyushengfan258/Miya-icon-theme.git &>> $INSTLOG
-    Miya-icon-theme/install.sh -black  &>> $INSTLOG
-    rm -rf Miya-icon-theme &>> $INSTLOG
+	# setup github theming
+	git clone https://github.com/yeyushengfan258/Miya-icon-theme.git &>>$INSTLOG
+	Miya-icon-theme/install.sh -black &>>$INSTLOG
+	rm -rf Miya-icon-theme &>>$INSTLOG
 
-    git clone https://github.com/Fausto-Korpsvart/Tokyo-Night-GTK-Theme.git &>> $INSTLOG
-    cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Dark-B ~/.local/share/themes/ &>> $INSTLOG
-	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Storm-B ~/.local/share/themes/ &>> $INSTLOG
-    rm -rf Tokyo-Night-GTK-Theme &>> $INSTLOG
+	git clone https://github.com/Fausto-Korpsvart/Tokyo-Night-GTK-Theme.git &>>$INSTLOG
+	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Dark-B ~/.local/share/themes/ &>>$INSTLOG
+	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Storm-B ~/.local/share/themes/ &>>$INSTLOG
+	rm -rf Tokyo-Night-GTK-Theme &>>$INSTLOG
 
-    git clone https://github.com/decaycs/decay-gtk &>> $INSTLOG
-	cp -r decay-gtk/Themes/Dark-decay ~/.local/share/themes/ &>> $INSTLOG
-	cp -r decay-gtk/Themes/Decayce ~/.local/share/themes/ &>> $INSTLOG
-	rm -rf decay-gtk &>> $INSTLOG
+	git clone https://github.com/decaycs/decay-gtk &>>$INSTLOG
+	cp -r decay-gtk/Themes/Dark-decay ~/.local/share/themes/ &>>$INSTLOG
+	cp -r decay-gtk/Themes/Decayce ~/.local/share/themes/ &>>$INSTLOG
+	rm -rf decay-gtk &>>$INSTLOG
 
-    # setup the first look and feel as dark
-    xfconf-query -c xsettings -p /Net/ThemeName -s "Tokyonight-Dark-B" &>> $INSTLOG
-    xfconf-query -c xsettings -p /Net/IconThemeName -s "Miya-black-dark" &>> $INSTLOG
-    gsettings set org.gnome.desktop.interface gtk-theme "Tokyonight-Dark-B" &>> $INSTLOG
-    gsettings set org.gnome.desktop.interface icon-theme "Miya-black-dark" &>> $INSTLOG
-    gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors &>> $INSTLOG
+	# setup the first look and feel as dark
+	xfconf-query -c xsettings -p /Net/ThemeName -s "Tokyonight-Dark-B" &>>$INSTLOG
+	xfconf-query -c xsettings -p /Net/IconThemeName -s "Miya-black-dark" &>>$INSTLOG
+	gsettings set org.gnome.desktop.interface gtk-theme "Tokyonight-Dark-B" &>>$INSTLOG
+	gsettings set org.gnome.desktop.interface icon-theme "Miya-black-dark" &>>$INSTLOG
+	gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors &>>$INSTLOG
 fi
 
 ### Install the starship shell ###
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to activate the starship shell? (y,n) ' STAR
 if [[ $STAR == "Y" || $STAR == "y" ]]; then
-    # install the starship shell
-    echo -e "$CNT - Hansen Crusher, Engage!"
-    echo -e "$CNT - Updating .bashrc..."
-    echo -e '\neval "$(starship init bash)"' >> ~/.bashrc
-    echo -e "$CNT - copying starship config file to ~/.config ..."
-    cp Extras/starship.toml ~/.config/
+	# install the starship shell
+	echo -e "$CNT - Hansen Crusher, Engage!"
+	echo -e "$CNT - Updating .bashrc..."
+	echo -e '\neval "$(starship init bash)"' >>~/.bashrc
+	echo -e "$CNT - copying starship config file to ~/.config ..."
+	cp Extras/starship.toml ~/.config/
 fi
+
 read -n1 -rep $'[\e[1;33mACTION\e[0m] - Install dev environment(PHP development)? [y/n] ' DEVAPP
 if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 	echo -e "\n$CNT - Installing Dev applications, this may take a while..."
-    for SOFTWR in ${development_stage[@]}; do
-        install_software $AUR $SOFTWR 
-    done
+	for SOFTWR in ${development_stage[@]}; do
+		install_software $AUR $SOFTWR
+	done
 
-	#PHP plugin 
+	#PHP plugin
 	yarn global add prettier @prettier/plugin-php
 
 	#phpstan -- currently not wotking in the aur
@@ -391,13 +391,13 @@ sudo pacman -Rns $(pacman -Qtdq)
 ### Install the custom application ###
 read -rep $'[\e[1;33mACTION\e[0m] - Would you to install custom applications(y,n) ' APPS
 if [[ $APPS == "Y" || $APPS == "y" ]]; then
-    echo -e "$CNT - Installing AUR applications, this may take a while..."
-    for SOFTWR in ${application_stage[@]}; do
-        install_software $AUR $SOFTWR 
-        if [[ SOFTWR == "makemkv" ]]
-            echo -e "\n$CNT - to fix MakeMKV to the following. \n1. login as root 'su -l'\n2. run the following command 'echo sg > /etc/modules-load.d/sg.conf'"
-        fi
-    done
+	echo -e "$CNT - Installing AUR applications, this may take a while..."
+	for SOFTWR in ${application_stage[@]}; do
+		install_software $AUR $SOFTWR
+		if [[ $SOFTWR == "makemkv" ]]; then
+			echo -e "\n$CNT - to fix MakeMKV to the following. \n1. login as root 'su -l'\n2. run the following command 'echo sg > /etc/modules-load.d/sg.conf'"
+		fi
+	done
 fi
 
 echo -e "\n$CNT - Reboot to finish installation"
