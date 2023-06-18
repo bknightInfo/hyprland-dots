@@ -101,21 +101,7 @@ application_stage=(
 )
 
 development_stage=(
-<<<<<<< HEAD
-	composer
-	php82-iconv
-	vscodium-bin
-	vscodium-bin-marketplace
-	github-desktop-bin
-	lazygit
-	phpactor
-	prettier
-	npm
-	yarn
-	visual-studio-code-bin
-=======
-    composer 
-    php82-iconv
+    composer
     vscodium-bin 
     vscodium-bin-marketplace
     github-desktop-bin 
@@ -124,7 +110,6 @@ development_stage=(
     prettier  
     npm 
     yarn
->>>>>>> e10d8005059889ecd129633375d4d0eeb2cc0448
 )
 
 for str in ${myArray[@]}; do
@@ -404,15 +389,6 @@ sudo pacman -Rns $(pacman -Qtdq)
 ### Install the custom application ###
 read -rep $'[\e[1;33mACTION\e[0m] - Would you to install custom applications(y,n) ' APPS
 if [[ $APPS == "Y" || $APPS == "y" ]]; then
-<<<<<<< HEAD
-	echo -e "$CNT - Installing AUR applications, this may take a while..."
-	for SOFTWR in ${application_stage[@]}; do
-		install_software $AUR $SOFTWR
-		if [[ $SOFTWR == "makemkv" ]]; then
-			echo -e "\n$CNT - to fix MakeMKV to the following. \n1. login as root 'su -l'\n2. run the following command 'echo sg > /etc/modules-load.d/sg.conf'"
-		fi
-	done
-=======
     echo -e "$CNT - Installing AUR applications, this may take a while..."
     for SOFTWR in ${application_stage[@]}; do
         install_software $AUR $SOFTWR 
@@ -420,7 +396,6 @@ if [[ $APPS == "Y" || $APPS == "y" ]]; then
             echo -e "\n$CNT - to fix MakeMKV to the following. \n1. login as root 'su -l'\n2. run the following command 'echo sg > /etc/modules-load.d/sg.conf'"
         fi
     done
->>>>>>> e10d8005059889ecd129633375d4d0eeb2cc0448
 fi
 
 echo -e "\n$CNT - Reboot to finish installation"
