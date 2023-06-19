@@ -5,7 +5,7 @@
 #system packages
 prep_stage=(
 	curl
-	
+	gcc12
 	hyprland
 	qt5-wayland
 	qt5ct
