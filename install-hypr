@@ -4,6 +4,7 @@
 
 #system packages
 prep_stage=(
+	curl
 	hyprland
 	qt5-wayland
 	qt5ct
@@ -13,8 +14,6 @@ prep_stage=(
 	polkit-gnome
 	pipewire
 	wireplumber
-	jq
-	gcc12
 	wl-clipboard
 	cliphist
 	pacman-contrib
@@ -34,6 +33,7 @@ install_stage=(
 	network-manager-applet
 	slurp
 	swappy
+	solaar
 	wofi
 	xdg-user-dirs
 	xdg-desktop-portal-hyprland
@@ -56,7 +56,6 @@ misc_stage=(
 	mdcat
 	noto-fonts-emoji
 	papirus-icon-theme
-	piper
 	playerctl
 	starship
 	swayidle
@@ -94,14 +93,13 @@ application_stage=(
 	cava
 	firefox
 	filezilla
-	gnome_boxes
 	libreoffice-fresh
-	makemkv
 	spotify-edge
 )
 
 development_stage=(
     composer
+	gnome-boxes
     vscodium-bin 
     vscodium-bin-marketplace
     github-desktop-bin 
@@ -110,6 +108,7 @@ development_stage=(
     prettier  
     npm 
     yarn
+	yay-bin
 )
 
 for str in ${myArray[@]}; do
@@ -145,44 +144,20 @@ clear
 
 #### Check for package manager ####
 # Check for AUR helper and install if not found
-ISAUR=$(command -v yay || command -v paru)
+ISAUR=$(command -v paru)
 
 if [ -n "$ISAUR" ]; then
 	echo -e "$COK - AUR helper was located, moving on."
-	AUR=${ISAUR##*/}
+	AUR=${ISAUR}
 else
-	echo -e "$CWR - AUR helper was NOT located"
-	while true; do
-		read -rp "$CAT Which AUR helper do you want to use, yay or paru? Enter 'y' or 'p': " choice
-		case "$choice" in
-		y | Y)
-			echo -e "$CWR - Installing yay from AUR"
-			git clone https://aur.archlinux.org/yay-bin.git &>>$INSTLOG
-			cd yay-bin &>>$INSTLOG
-			makepkg -si --noconfirm &>>$INSTLOG
-			cd $SCRIPT_DIR
-			rm -rf yay-bin &>>$INSTLOG
-			echo -e "$COK - Yay installed."
-			AUR="yay"
-			break
-			;;
-		p | P)
-			echo -e "$CWR - Installing Paru from AUR"
-			git clone https://aur.archlinux.org/paru-bin.git &>>$INSTLOG
-			cd paru-bin &>>$INSTLOG
-			makepkg -si --noconfirm &>>$INSTLOG
-			cd $SCRIPT_DIR
-			rm -rf paru-bin &>>$INSTLOG
-			echo -e "$COK - Paru installed."
-			AUR="paru"
-			break
-			;;
-		*)
-			echo -e "$CER - Invalid choice. Please enter 'y' or 'p'\n"
-			continue
-			;;
-		esac
-	done
+	echo -e "$CWR - Installing Paru"
+	git clone https://aur.archlinux.org/paru-bin.git &>>$INSTLOG
+	cd paru-bin &>>$INSTLOG
+	makepkg -si --noconfirm &>>$INSTLOG
+	cd $SCRIPT_DIR
+	rm -rf paru-bin &>>$INSTLOG
+	echo -e "$COK - Paru installed."
+	AUR="paru"
 fi
 
 # function that will test for a package and if not found it will attempt to install it
@@ -195,9 +170,6 @@ install_software() {
 		;;
 	paru)
 		APP="paru"
-		;;
-	yay)
-		APP="yay"
 		;;
 	esac
 	if $APP -Q $2 &>>/dev/null; then
@@ -392,9 +364,6 @@ if [[ $APPS == "Y" || $APPS == "y" ]]; then
     echo -e "$CNT - Installing AUR applications, this may take a while..."
     for SOFTWR in ${application_stage[@]}; do
         install_software $AUR $SOFTWR 
-        if [[ SOFTWR == "makemkv" ]]; then
-            echo -e "\n$CNT - to fix MakeMKV to the following. \n1. login as root 'su -l'\n2. run the following command 'echo sg > /etc/modules-load.d/sg.conf'"
-        fi
     done
 fi
 
