@@ -4,7 +4,6 @@
 
 #system packages
 prep_stage=(
-	curl
 	gcc12
 	hyprland
 	qt5-wayland
@@ -354,10 +353,7 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 	sudo sed -i 's/^;extension=mysqli/extension=mysqli/' /etc/php/php.ini &>>$INSTLOG
 	sudo sed -i 's/^;extension=pdo_mysql/extension=pdo_mysql/' /etc/php/php.ini &>>$INSTLOG
 	sudo sed -i 's/^;extension=iconv/extension=iconv/' /etc/php/php.ini &>>$INSTLOG
-fi
-
-# Remove orphan files
-sudo pacman -Rns $(pacman -Qtdq)
+fi 
 
 ### Install the custom application ###
 read -rep $'[\e[1;33mACTION\e[0m] - Would you to install custom applications(y,n) ' APPS
@@ -367,5 +363,8 @@ if [[ $APPS == "Y" || $APPS == "y" ]]; then
         install_software $AUR $SOFTWR 
     done
 fi
+
+# Remove orphan files
+sudo pacman -Rns $(pacman -Qtdq)  --noconfirm
 
 echo -e "\n$CNT - Reboot to finish installation"
