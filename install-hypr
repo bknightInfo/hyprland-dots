@@ -47,7 +47,6 @@ misc_stage=(
 	btop
 	capitaine-cursors
 	celluloid
-	feh
 	file-roller
 	exa
 	fzf
@@ -108,7 +107,6 @@ development_stage=(
     prettier  
     npm 
     yarn
-	yay-bin
 )
 
 for str in ${myArray[@]}; do
