@@ -6,7 +6,6 @@ COK="[\e[1;32mOK\e[0m]"
 CER="[\e[1;31mERROR\e[0m]"
 CAT="[\e[1;37mATTENTION\e[0m]"
 CWR="[\e[1;35mWARNING\e[0m]"
-CAC="[\e[1;33mACTION\e[0m]"
 INSTLOG="install.log"
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
@@ -204,7 +203,7 @@ remove_software() {
 }
 
 ### Install all of the above pacakges ####
-read -rep $'$CAC - Would you like to install the packages? (y,n) ' INST
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
 if [[ $INST == "Y" || $INST == "y" ]]; then
 
 	# Prep Stage - Bunch of needed items
@@ -255,7 +254,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 fi
 
 ### Copy Config Files ###
-read -rep $'$CAC - Would you like to copy config files? (y,n) ' CFG
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to copy config files? (y,n) ' CFG
 if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	echo -e "$CNT - Copying config files..."
 
@@ -323,7 +322,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 fi
 
 ### Install the starship shell ###
-read -rep $'$CAC - Would you like to activate the starship shell? (y,n) ' STAR
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to activate the starship shell? (y,n) ' STAR
 if [[ $STAR == "Y" || $STAR == "y" ]]; then
 	# install the starship shell
 	echo -e "$CNT - Hansen Crusher, Engage!"
@@ -333,7 +332,7 @@ if [[ $STAR == "Y" || $STAR == "y" ]]; then
 	cp Extras/starship.toml ~/.config/
 fi
 
-read -n1 -rep $'$CAC - Install dev environment(PHP development)? [y/n] ' DEVAPP
+read -n1 -rep $'[\e[1;33mACTION\e[0m] - Install dev environment(PHP development)? [y/n] ' DEVAPP
 if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 	echo -e "\n$CNT - Installing Dev applications, this may take a while..."
 	for SOFTWR in ${development_stage[@]}; do
@@ -362,7 +361,7 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 fi 
 
 ### Install the custom application ###
-read -rep $'$CAC - Would you to install custom applications(y,n) ' APPS
+read -rep $'[\e[1;33mACTION\e[0m] - Would you to install custom applications(y,n) ' APPS
 if [[ $APPS == "Y" || $APPS == "y" ]]; then
     echo -e "$CNT - Installing AUR applications, this may take a while..."
     for SOFTWR in ${application_stage[@]}; do
