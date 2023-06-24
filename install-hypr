@@ -1,13 +1,21 @@
 #!/bin/bash
 
-# Define the software that would be installed
+# set some colors
+CNT="[\e[1;36mNOTE\e[0m]"
+COK="[\e[1;32mOK\e[0m]"
+CER="[\e[1;31mERROR\e[0m]"
+CAT="[\e[1;37mATTENTION\e[0m]"
+CWR="[\e[1;35mWARNING\e[0m]"
+CAC="[\e[1;33mACTION\e[0m]"
+INSTLOG="install.log"
 
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+
+# Define the software that would be installed
 #system packages
 prep_stage=(
 	gcc12
 	hyprland
-	qt5-wayland
-	qt5ct
 	qt6-wayland
 	qt6ct
 	gtk3
@@ -33,7 +41,7 @@ install_stage=(
 	network-manager-applet
 	slurp
 	swappy
-	solaar
+	thunar
 	wofi
 	xdg-user-dirs
 	xdg-desktop-portal-hyprland
@@ -56,10 +64,9 @@ misc_stage=(
 	noto-fonts-emoji
 	papirus-icon-theme
 	playerctl
+	solaar
 	starship
 	swayidle
-	ttf-jetbrains-mono-nerd
-	thunar
 	thunar-archive-plugin
 	neofetch
 	neovim
@@ -83,7 +90,6 @@ aur_stage=(
 remove_stage=(
 	xdg-desktop-portal-gnome
 	xdg-desktop-portal-gtk
-	xdg-user-dirs
 )
 
 #custom applications
@@ -99,7 +105,7 @@ application_stage=(
 development_stage=(
     composer
 	gnome-boxes
-    vscodium-bin 
+    vscodium 
     vscodium-bin-marketplace
     github-desktop-bin 
     lazygit 
@@ -109,20 +115,22 @@ development_stage=(
     yarn
 )
 
+nerd_fonts=( 
+	CascadiaCode
+	FiraCode
+	Go-Mono 
+	Hack
+	JetBrainsMono
+	Meslo
+	Mononoki
+	RobotoMono
+	SourceCodePro
+	UbuntuMono
+)
+
 for str in ${myArray[@]}; do
 	echo $str
 done
-
-# set some colors
-CNT="[\e[1;36mNOTE\e[0m]"
-COK="[\e[1;32mOK\e[0m]"
-CER="[\e[1;31mERROR\e[0m]"
-CAT="[\e[1;37mATTENTION\e[0m]"
-CWR="[\e[1;35mWARNING\e[0m]"
-CAC="[\e[1;33mACTION\e[0m]"
-INSTLOG="install.log"
-
-SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 
 ######
 # functions go here
@@ -196,7 +204,7 @@ remove_software() {
 }
 
 ### Install all of the above pacakges ####
-read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
+read -rep $'$CAC - Would you like to install the packages? (y,n) ' INST
 if [[ $INST == "Y" || $INST == "y" ]]; then
 
 	# Prep Stage - Bunch of needed items
@@ -247,7 +255,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 fi
 
 ### Copy Config Files ###
-read -rep $'[\e[1;33mACTION\e[0m] - Would you like to copy config files? (y,n) ' CFG
+read -rep $'$CAC - Would you like to copy config files? (y,n) ' CFG
 if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	echo -e "$CNT - Copying config files..."
 
@@ -315,7 +323,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 fi
 
 ### Install the starship shell ###
-read -rep $'[\e[1;33mACTION\e[0m] - Would you like to activate the starship shell? (y,n) ' STAR
+read -rep $'$CAC - Would you like to activate the starship shell? (y,n) ' STAR
 if [[ $STAR == "Y" || $STAR == "y" ]]; then
 	# install the starship shell
 	echo -e "$CNT - Hansen Crusher, Engage!"
@@ -325,7 +333,7 @@ if [[ $STAR == "Y" || $STAR == "y" ]]; then
 	cp Extras/starship.toml ~/.config/
 fi
 
-read -n1 -rep $'[\e[1;33mACTION\e[0m] - Install dev environment(PHP development)? [y/n] ' DEVAPP
+read -n1 -rep $'$CAC - Install dev environment(PHP development)? [y/n] ' DEVAPP
 if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 	echo -e "\n$CNT - Installing Dev applications, this may take a while..."
 	for SOFTWR in ${development_stage[@]}; do
@@ -354,13 +362,26 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 fi 
 
 ### Install the custom application ###
-read -rep $'[\e[1;33mACTION\e[0m] - Would you to install custom applications(y,n) ' APPS
+read -rep $'$CAC - Would you to install custom applications(y,n) ' APPS
 if [[ $APPS == "Y" || $APPS == "y" ]]; then
     echo -e "$CNT - Installing AUR applications, this may take a while..."
     for SOFTWR in ${application_stage[@]}; do
         install_software $AUR $SOFTWR 
     done
 fi
+
+
+mkdir -p ~/.local/share/fonts
+
+cd /tmp
+
+for font in ${nerd_fonts[@]}
+do
+    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/$font.zip
+	unzip $font.zip -d $HOME/.local/share/fonts/$font/
+    rm $font.zip
+done
+fc-cache
 
 # Remove orphan files
 sudo pacman -Rns $(pacman -Qtdq)  --noconfirm
