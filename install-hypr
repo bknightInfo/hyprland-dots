@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# ToDo - replace swwww to hyprpaper (https://github.com/hyprwm/hyprpaper)
 # set some colors
 CNT="[\e[1;36mNOTE\e[0m]"
 COK="[\e[1;32mOK\e[0m]"
@@ -38,6 +39,7 @@ install_stage=(
 	pavucontrol
 	brightnessctl
 	network-manager-applet
+	sddm
 	slurp
 	swappy
 	thunar
@@ -62,8 +64,7 @@ misc_stage=(
 	mdcat
 	noto-fonts-emoji
 	papirus-icon-theme
-	playerctl
-	solaar
+	playerctlhttps://gitlab.com/fadingeek/config-files
 	starship
 	swayidle
 	thunar-archive-plugin
@@ -76,15 +77,12 @@ aur_stage=(
 	grimblast
 	nwg-look-bin
 	swaync
-	sddm-git
-	sddm-config-editor-git
-	sddm-sugar-candy-git
 	swaylock-effects
 	swww
 	waybar-hyprland-git
 	wlogout
 	zsh-autocomplete-git
-)
+)https://gitlab.com/fadingeek/config-files
 
 remove_stage=(
 	xdg-desktop-portal-gnome
@@ -111,20 +109,16 @@ development_stage=(
     phpactor
     prettier  
     npm 
+	mysql
     yarn
 )
 
 nerd_fonts=( 
 	CascadiaCode
 	FiraCode
-	Go-Mono 
-	Hack
 	JetBrainsMono
 	Meslo
 	Mononoki
-	RobotoMono
-	SourceCodePro
-	UbuntuMono
 )
 
 for str in ${myArray[@]}; do
@@ -148,7 +142,6 @@ show_progress() {
 clear
 
 #### Check for package manager ####
-# Check for AUR helper and install if not found
 ISAUR=$(command -v paru)
 
 if [ -n "$ISAUR" ]; then
@@ -162,7 +155,7 @@ else
 	cd $SCRIPT_DIR
 	rm -rf paru-bin &>>$INSTLOG
 	echo -e "$COK - Paru installed."
-	AUR="paru"
+	AUR=${ISAUR}
 fi
 
 # function that will test for a package and if not found it will attempt to install it
@@ -242,14 +235,14 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	sleep 2
 
 	# Enable the sddm login manager service
-	echo -e "$CNT - Enabling the SDDM Service..."
-	sudo systemctl enable sddm &>>$INSTLOG
+	echo -e "$CNT - Enabling the sddm Service..."
+	sudo systemctl enable sddm -f &>>$INSTLOG
 	sleep 2
 
 	# Stage AUR - AUR applications
 	echo -e "$CNT - removing unwanted applications"
 	for SOFTWR in ${remove_stage[@]}; do
-		remove_software "pacman" $SOFTWR
+		remove_software $SOFTWR
 	done
 fi
 
@@ -274,19 +267,29 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 
 	mkdir -p ~/Pictures/Screenshots
 
-	# Copy the SDDM theme
-	echo -e "$CNT - Setting up the login screen."
-	sudo cp -R Extras/sdt /usr/share/sddm/themes/
-	sudo chown -R $USER:$USER /usr/share/sddm/themes/sdt
-	sudo mkdir /etc/sddm.conf.d
-	echo -e "[Theme]\nCurrent=sdt" | sudo tee -a /etc/sddm.conf.d/10-theme.conf &>>$INSTLOG
 	WLDIR=/usr/share/wayland-sessions
 	if [ -d "$WLDIR" ]; then
 		echo -e "$COK - $WLDIR found"
 	else
-		echo -e "$CWR - $WLDIR NOT fgrimblastound, creating..."
+		echo -e "$CWR - $WLDIR creating session..."
 		sudo mkdir $WLDIR
 	fi
+
+	SDDMFILE=/etc/sddm.conf
+	if [ -f "$SDDMFILE" ]; then
+    	echo "$SDDMFILE exists."
+		echo "[Autologin]" | sudo tee --append $SDDMFILE
+		echo "Session=/usr/share/wayland-sessions/hyprland.desktop" | sudo tee --append $SDDMFILE
+		echo "USER=$USER" | sudo tee --append $SDDMFILE
+	else 
+    	sudo touch SDDMFILE
+		echo "[Autologin]" | sudo tee --append $SDDMFILE
+		echo "Session=/usr/share/wayland-sessions/hyprland.desktop" | sudo tee --append $SDDMFILE
+		echo "USER=$USER" | sudo tee --append $SDDMFILE
+	fi
+
+	### Install the starship shell ###
+	cp Extras/starship.toml ~/.config/
 
 	#uncomment pacman settings
 	sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf &>>$INSTLOG
@@ -319,17 +322,6 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	gsettings set org.gnome.desktop.interface gtk-theme "Tokyonight-Dark-B" &>>$INSTLOG
 	gsettings set org.gnome.desktop.interface icon-theme "Miya-black-dark" &>>$INSTLOG
 	gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors &>>$INSTLOG
-fi
-
-### Install the starship shell ###
-read -rep $'[\e[1;33mACTION\e[0m] - Would you like to activate the starship shell? (y,n) ' STAR
-if [[ $STAR == "Y" || $STAR == "y" ]]; then
-	# install the starship shell
-	echo -e "$CNT - Hansen Crusher, Engage!"
-	echo -e "$CNT - Updating .bashrc..."
-	echo -e '\neval "$(starship init bash)"' >>~/.bashrc
-	echo -e "$CNT - copying starship config file to ~/.config ..."
-	cp Extras/starship.toml ~/.config/
 fi
 
 read -n1 -rep $'[\e[1;33mACTION\e[0m] - Install dev environment(PHP development)? [y/n] ' DEVAPP
@@ -369,11 +361,8 @@ if [[ $APPS == "Y" || $APPS == "y" ]]; then
     done
 fi
 
-
+### install nerd fonts
 mkdir -p ~/.local/share/fonts
-
-cd /tmp
-
 for font in ${nerd_fonts[@]}
 do
     wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/$font.zip
