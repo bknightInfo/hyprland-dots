@@ -64,7 +64,7 @@ misc_stage=(
 	mdcat
 	noto-fonts-emoji
 	papirus-icon-theme
-	playerctlhttps://gitlab.com/fadingeek/config-files
+	playerctl
 	starship
 	swayidle
 	thunar-archive-plugin
