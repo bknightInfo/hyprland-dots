@@ -101,8 +101,7 @@ application_stage=(
 
 development_stage=(
     composer
-	gnome-boxes
-    vscodium 
+    vscodium-bin
     vscodium-bin-marketplace
     github-desktop-bin 
     lazygit 
