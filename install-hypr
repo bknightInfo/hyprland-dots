@@ -104,11 +104,10 @@ development_stage=(
     vscodium-bin
     vscodium-bin-marketplace
     github-desktop-bin 
-    lazygit 
     phpactor
     prettier  
     npm 
-	mysql
+    mysql
     yarn
 )
 
