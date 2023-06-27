@@ -82,7 +82,7 @@ aur_stage=(
 	waybar-hyprland-git
 	wlogout
 	zsh-autocomplete-git
-)https://gitlab.com/fadingeek/config-files
+)
 
 remove_stage=(
 	xdg-desktop-portal-gnome
