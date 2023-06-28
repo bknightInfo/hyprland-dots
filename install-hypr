@@ -321,6 +321,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors &>>$INSTLOG
 
 	#grub theme
+	#https://gitlab.com/VandalByte/darkmatter-grub-theme
 	sudo cp -r Extras/darkmatter /boot/grub/themes/
 	echo -e 'GRUB_THEME="/boot/grub/themes/darkmatter/theme.txt"' | sudo tee -a /etc/default/grub &>>$INSTLOG
 	echo -e 'GRUB_DISABLE_OS_PROBER=false' | sudo tee -a /etc/default/grub &>>$INSTLOG
