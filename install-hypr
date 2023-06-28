@@ -57,6 +57,7 @@ misc_stage=(
 	file-roller
 	flatpak
 	exa
+	firefox
 	fzf
 	gtk-engine-murrine
 	kitty
@@ -96,7 +97,6 @@ application_stage=(
 	com.spotify.Client
 	io.github.celluloid_player.Celluloid
 	io.github.TheWisker.Cavasik
-	org.mozilla.firefox
 	org.filezillaproject.Filezilla
 	org.libreoffice.LibreOffice
 )
