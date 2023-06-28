@@ -320,10 +320,9 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	gsettings set org.gnome.desktop.interface icon-theme "Miya-black-dark" &>>$INSTLOG
 	gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors &>>$INSTLOG
 
-
 	#grub theme
-	sudo cp -r Extras/dark-matter /boot/grub/themes/
-	echo -e 'GRUB_THEME="/boot/grub/themes/dark-matter/theme.txt"' | sudo tee -a /etc/default/grub &>>$INSTLOG
+	sudo cp -r Extras/darkmatter /boot/grub/themes/
+	echo -e 'GRUB_THEME="/boot/grub/themes/darkmatter/theme.txt"' | sudo tee -a /etc/default/grub &>>$INSTLOG
 	echo -e 'GRUB_DISABLE_OS_PROBER=false' | sudo tee -a /etc/default/grub &>>$INSTLOG
 	sudo grub-mkconfig -o /boot/grub/grub.cfg &>>$INSTLOG
 fi
