@@ -2,7 +2,7 @@
 
 desktop-image: "background.png"
 title-text: ""
-terminal-font: "Hack Bold 22"
+terminal-font: "Hack Bold 18"
 terminal-left: "20%"
 terminal-top: "35%"
 terminal-width: "60%"
