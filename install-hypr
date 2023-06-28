@@ -72,10 +72,10 @@ misc_stage=(
 )
 
 aur_stage=(
+	brave-bin
 	fnm-bin
 	grimblast
 	nwg-look-bin
-	sddm-sugar-candy-git
 	sddm-config-editor-git
 	swaync
 	swaylock-effects
@@ -92,7 +92,6 @@ remove_stage=(
 
 #custom applications - switch to flatpak
 application_stage=(
-	com.brave.Browser
 	com.github.tchx84.Flatseal
 	com.spotify.Client
 	io.github.celluloid_player.Celluloid
@@ -165,20 +164,18 @@ fi
 install_software() {
 	case $1 in
 	pacman)
-		APP="sudo pacman -S --noconfirm"
+		APP="sudo pacman"
 		;;
 	paru)
-		APP="paru -S --noconfirm"
+		APP="paru"
 		;;
-	flatpak)
-		APP="flatpak install flathub -y"
 	esac
 	if $APP -Q $2 &>>/dev/null; then
 		echo -e "$COK - $2 is already installed."
 	else
 		# no package found so installing
 		echo -e "$CNT - Now installing $2 ..."
-		$APP $2 &>>$INSTLOG
+		$APP -S --noconfirm $2 &>>$INSTLOG
 		# test to make sure package installed
 		if $APP -Q $2 &>>/dev/null; then
 			echo -e "\e[1A\e[K$COK - $2 was installed."
@@ -360,7 +357,7 @@ fi
 read -rep $'[\e[1;33mACTION\e[0m] - Would you to install custom applications(y,n) ' APPS
 if [[ $APPS == "Y" || $APPS == "y" ]]; then
     for SOFTWR in ${application_stage[@]}; do
-        install_software "flatpak" $SOFTWR 
+        flatpak install flathub -y $SOFTWR 
     done
 fi
 
