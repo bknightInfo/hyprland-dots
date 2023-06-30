@@ -13,35 +13,30 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 
 # Define the software that would be installed
 #system packages
-prep_stage=(
-	gcc12
-	hyprland
-	gtk3
-	polkit-gnome
-	pipewire
-	wireplumber
-	wl-clipboard
-	cliphist
-	pacman-contrib
-	wget
-)
-
 install_stage=(
+	brightnessctl
 	bluez
 	bluez-utils
 	blueman
+	cliphist
+	gcc12
 	grim
 	gvfs
+	hyprland
 	mako
-	pamixer
-	pavucontrol
-	brightnessctl
-	network-manager-applet
 	os-prober
+	pacman-contrib
+	pamixer
+	pipewire
+	pavucontrol
+	network-manager-applet
 	sddm
 	slurp
 	swappy
 	thunar
+	wget
+	wireplumber
+	wl-clipboard
 	wofi
 	xdg-user-dirs
 	xdg-desktop-portal-hyprland
@@ -54,15 +49,13 @@ install_stage=(
 misc_stage=(
 	btop
 	capitaine-cursors
+	exa
 	file-roller
 	flatpak
-	exa
-	firefox
+	polkit-gnome
 	fzf
-	gtk-engine-murrine
 	kitty
 	mdcat
-	noto-fonts-emoji
 	papirus-icon-theme
 	playerctl
 	starship
@@ -73,7 +66,6 @@ misc_stage=(
 )
 
 aur_stage=(
-	brave-bin
 	fnm-bin
 	grimblast
 	nwg-look-bin
@@ -91,16 +83,6 @@ remove_stage=(
 	xdg-desktop-portal-gtk
 )
 
-#custom applications - switch to flatpak
-application_stage=(
-	com.github.tchx84.Flatseal
-	com.spotify.Client
-	io.github.celluloid_player.Celluloid
-	io.github.TheWisker.Cavasik
-	org.filezillaproject.Filezilla
-	org.libreoffice.LibreOffice
-)
-
 development_stage=(
     composer
     vscodium-bin
@@ -113,12 +95,27 @@ development_stage=(
     yarn
 )
 
+# feel free to modify
+application_stage=(
+	com.brave.Browser
+	com.github.tchx84.Flatseal
+	com.spotify.Client
+	io.github.celluloid_player.Celluloid
+	io.github.TheWisker.Cavasik
+	org.filezillaproject.Filezilla
+	org.gnome.Boxes
+	org.gnome.Loupe
+	org.mozilla.firefox
+	org.libreoffice.LibreOffice
+)
+
 nerd_fonts=( 
 	CascadiaCode
 	FiraCode
 	JetBrainsMono
 	Meslo
 	Mononoki
+	noto
 )
 
 for str in ${myArray[@]}; do
@@ -196,25 +193,18 @@ remove_software() {
 }
 
 ### Install all of the above pacakges ####
-read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
+read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
 if [[ $INST == "Y" || $INST == "y" ]]; then
-
-	# Prep Stage - Bunch of needed items
-	echo -e "$CNT - Prep Stage - Installing needed components, this may take a while..."
-	for SOFTWR in ${prep_stage[@]}; do
-		install_software "pacman" $SOFTWR
-	done
-
-	#fix needed for waybar-hyprland
-	export CC=gcc-12 CXX=g++-12
-
 	# Stage 1 - main components
 	echo -e "$CNT - Installing main components, this may take a while..."
 	for SOFTWR in ${install_stage[@]}; do
 		install_software "pacman" $SOFTWR
 	done
 
-	# Stage 2 - main applications
+	#fix needed for waybar-hyprland
+	export CC=gcc-12 CXX=g++-12
+
+	# Stage 1 - main applications
 	echo -e "$CNT - Installing misc applications, this may take a while..."
 	for SOFTWR in ${misc_stage[@]}; do
 		install_software "pacman" $SOFTWR
@@ -244,7 +234,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 fi
 
 ### Copy Config Files ###
-read -rep $'[\e[1;33mACTION\e[0m] - Would you like to copy config files? (y,n) ' CFG
+read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you like to copy config files? (y,n) ' CFG
 if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	echo -e "$CNT - Copying config files..."
 
@@ -332,6 +322,14 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 		install_software $AUR $SOFTWR
 	done
 
+	DEVDIR=~/Documents/Development/
+	if [ -d "$DEVDIR" ]; then
+		echo -e "$COK - $DEVDIR found"
+	else
+		echo -e "$CWR - $DEVDIR creating folder..."
+		sudo mkdir -p $DEVDIR
+	fi
+
 	#PHP plugin
 	yarn global add prettier @prettier/plugin-php
 
@@ -354,7 +352,7 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 fi 
 
 ### Install the custom application ###
-read -rep $'[\e[1;33mACTION\e[0m] - Would you to install custom applications(y,n) ' APPS
+read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you to install custom applications(y,n) ' APPS
 if [[ $APPS == "Y" || $APPS == "y" ]]; then
     for SOFTWR in ${application_stage[@]}; do
         flatpak install flathub -y $SOFTWR 
