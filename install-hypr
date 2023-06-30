@@ -91,6 +91,7 @@ development_stage=(
     prettier  
     npm 
     mysql
+    visual-studio-code-bin
     yarn
 )
 
@@ -98,7 +99,6 @@ development_stage=(
 application_stage=(
 	com.brave.Browser
 	com.github.tchx84.Flatseal
-        com.visualstudio.code
 	com.spotify.Client
 	io.github.celluloid_player.Celluloid
 	io.github.TheWisker.Cavasik
