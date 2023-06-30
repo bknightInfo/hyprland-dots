@@ -91,7 +91,8 @@ development_stage=(
     prettier  
     npm 
     mysql
-    visual-studio-code-bin
+    vscodium-bin 
+    vscodium-bin-marketplace
     yarn
 )
 
@@ -230,6 +231,12 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	for SOFTWR in ${remove_stage[@]}; do
 		remove_software $SOFTWR
 	done
+
+	# Stage flatpak
+	echo -e "$CNT - installing flatpak applications"
+	for SOFTWR in ${application_stage[@]}; do
+        	flatpak install flathub -y $SOFTWR 
+    	done
 fi
 
 ### Copy Config Files ###
@@ -314,6 +321,16 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	sudo grub-mkconfig -o /boot/grub/grub.cfg &>>$INSTLOG
 fi
 
+### install nerd fonts
+mkdir -p ~/.local/share/fonts
+for font in ${nerd_fonts[@]}
+do
+    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/$font.zip
+	unzip $font.zip -d $HOME/.local/share/fonts/$font/
+    rm $font.zip
+done
+fc-cache
+
 read -n1 -rep $'[\e[1;33mACTION\e[0m] - Install dev environment(PHP development)? [y/n] ' DEVAPP
 if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 	echo -e "\n$CNT - Installing Dev applications, this may take a while..."
@@ -349,24 +366,6 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 	sudo sed -i 's/^;extension=pdo_mysql/extension=pdo_mysql/' /etc/php/php.ini &>>$INSTLOG
 	sudo sed -i 's/^;extension=iconv/extension=iconv/' /etc/php/php.ini &>>$INSTLOG
 fi 
-
-### Install the custom application ###
-read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you to install custom applications(y,n) ' APPS
-if [[ $APPS == "Y" || $APPS == "y" ]]; then
-    for SOFTWR in ${application_stage[@]}; do
-        flatpak install flathub -y $SOFTWR 
-    done
-fi
-
-### install nerd fonts
-mkdir -p ~/.local/share/fonts
-for font in ${nerd_fonts[@]}
-do
-    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/$font.zip
-	unzip $font.zip -d $HOME/.local/share/fonts/$font/
-    rm $font.zip
-done
-fc-cache
 
 # Remove orphan files
 sudo pacman -Rns $(pacman -Qtdq)  --noconfirm
