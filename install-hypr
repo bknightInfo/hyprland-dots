@@ -32,7 +32,6 @@ install_stage=(
 	network-manager-applet
 	sddm
 	slurp
-	swappy
 	thunar
 	wget
 	wireplumber
@@ -47,7 +46,7 @@ install_stage=(
 )
 
 misc_stage=(
-	btop
+	htop
 	capitaine-cursors
 	exa
 	file-roller
@@ -56,7 +55,7 @@ misc_stage=(
 	fzf
 	kitty
 	mdcat
-        noto-fonts-emoji
+    noto-fonts-emoji
 	papirus-icon-theme
 	playerctl
 	starship
@@ -97,17 +96,19 @@ development_stage=(
 )
 
 # feel free to modify
-application_stage=(
-	com.brave.Browser
+flakpak_stage=(
 	com.github.tchx84.Flatseal
-	com.spotify.Client
 	io.github.celluloid_player.Celluloid
 	io.github.TheWisker.Cavasik
 	org.filezillaproject.Filezilla
-	org.gnome.Boxes
 	org.gnome.Loupe
 	org.mozilla.firefox
 	org.libreoffice.LibreOffice
+)
+
+aur_applications=(
+	brave-bin
+	spotify-edge
 )
 
 nerd_fonts=( 
@@ -121,19 +122,6 @@ nerd_fonts=(
 for str in ${myArray[@]}; do
 	echo $str
 done
-
-######
-# functions go here
-
-# function that would show a progress bar to the user
-show_progress() {
-	while ps | grep $1 &>/dev/null; do
-		echo -n "."
-		sleep 2
-	done
-	echo -en "Done!\n"
-	sleep 2
-}
 
 # clear the screen
 clear
@@ -187,7 +175,7 @@ install_software() {
 #remove unwanted applications
 remove_software() {
 	if $APP -Q $1 &>>/dev/null; then
-		sudo pacman -Rcns $1 --noconfirm &>>$INSTLOG
+		sudo pacman -Rcns --noconfirm $1 &>>$INSTLOG
 		echo -e "$COK - $1 removed."
 	fi
 }
@@ -211,9 +199,27 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	done
 
 	# Stage AUR - AUR applications
+	echo -e "$CNT - Installing AUR system tools, this may take a while..."
+	for SOFTWR in ${aur_stage[@]}; do
+		install_software $AUR $SOFTWR
+	done
+
+	# Stage flatpak
+	echo -e "$CNT - installing flatpak applications"
+	for SOFTWR in ${flatpak_stage[@]}; do
+        flatpak install flathub -y $SOFTWR 
+    done
+
+	# Stage AUR - AUR applications
 	echo -e "$CNT - Installing AUR applications, this may take a while..."
 	for SOFTWR in ${aur_stage[@]}; do
 		install_software $AUR $SOFTWR
+	done
+
+	# clean up files
+	echo -e "$CNT - removing unwanted applications"
+	for SOFTWR in ${remove_stage[@]}; do
+		remove_software $SOFTWR
 	done
 
 	# Start the bluetooth service
@@ -225,18 +231,6 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	echo -e "$CNT - Enabling the sddm Service..."
 	sudo systemctl enable sddm -f &>>$INSTLOG
 	sleep 2
-
-	# Stage AUR - AUR applications
-	echo -e "$CNT - removing unwanted applications"
-	for SOFTWR in ${remove_stage[@]}; do
-		remove_software $SOFTWR
-	done
-
-	# Stage flatpak
-	echo -e "$CNT - installing flatpak applications"
-	for SOFTWR in ${application_stage[@]}; do
-        	flatpak install flathub -y $SOFTWR 
-    	done
 fi
 
 ### Copy Config Files ###
@@ -265,7 +259,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	if [ -d "$SCRNSHT" ]; then
 		echo -e "$COK - $SCRNSHT found"
 	else
-		echo -e "$CWR - $SCRNSHT creating session..."
+		echo -e "$CWR - $SCRNSHT creating folder..."
 		sudo mkdir -p $SCRNSHT
 	fi
 
@@ -290,7 +284,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim &>>$INSTLOG
 	git clone --depth 1 https://github.com/bknightInfo/astrovim_files ~/.config/nvim/lua/user &>>$INSTLOG
 
-	# setup github theming
+	# setup gtk theming
 	mkdir -p ~/.local/share/themes/
 	git clone https://github.com/yeyushengfan258/Miya-icon-theme.git &>>$INSTLOG
 	Miya-icon-theme/install.sh -black &>>$INSTLOG
@@ -368,6 +362,6 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 fi 
 
 # Remove orphan files
-sudo pacman -Rns $(pacman -Qtdq)  --noconfirm
+sudo pacman -Rns --noconfirm $(pacman -Qtdq)
 
 echo -e "\n$CNT - Reboot to finish installation"
