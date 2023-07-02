@@ -266,7 +266,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 		echo -e "$COK - $SCRNSHT found"
 	else
 		echo -e "$CWR - $SCRNSHT creating folder..."
-		sudo mkdir -p $SCRNSHT
+		mkdir -p $SCRNSHT
 	fi
 
 	WLDIR=/usr/share/wayland-sessions
@@ -300,11 +300,6 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Dark-B ~/.local/share/themes/
 	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Storm-B ~/.local/share/themes/ 
 	rm -rf Tokyo-Night-GTK-Theme &>>$INSTLOG
-
-	git clone https://github.com/decaycs/decay-gtk &>>$INSTLOG
-	cp -r decay-gtk/Themes/Dark-decay ~/.local/share/themes/ &>>$INSTLOG
-	cp -r decay-gtk/Themes/Decayce ~/.local/share/themes/ &>>$INSTLOG
-	rm -rf decay-gtk &>>$INSTLOG
 
 	# setup the first look and feel as dark
 	xfconf-query -c xsettings -p /Net/ThemeName -s "Tokyonight-Dark-B" &>>$INSTLOG
@@ -343,7 +338,7 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 		echo -e "$COK - $DEVDIR found"
 	else
 		echo -e "$CWR - $DEVDIR creating folder..."
-		sudo mkdir -p $DEVDIR
+		mkdir -p $DEVDIR
 	fi
 
 	#PHP plugin
