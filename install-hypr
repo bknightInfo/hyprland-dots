@@ -18,7 +18,6 @@ install_stage=(
 	brightnessctl
 	cliphist
 	gcc12
-        gtk3
 	grim
 	gvfs
 	hyprland
@@ -330,7 +329,7 @@ do
 done
 fc-cache
 
-read -n1 -rep "${CAT} - Install dev environment(PHP development)? [y/n] ' DEVAPP
+read -n1 -rep "${CAT} - Install dev environment(PHP development)? [y/n] " DEVAPP
 if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 	echo -e "\n$CNT - Installing Dev applications, this may take a while..."
 	for SOFTWR in ${development_stage[@]}; do
