@@ -18,6 +18,7 @@ install_stage=(
 	brightnessctl
 	cliphist
 	gcc12
+        gtk3
 	grim
 	gvfs
 	hyprland
