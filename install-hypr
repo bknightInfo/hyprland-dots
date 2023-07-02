@@ -2,11 +2,13 @@
 
 # ToDo - replace swwww to hyprpaper (https://github.com/hyprwm/hyprpaper)
 # set some colors
-COK="$(tput setaf 2)[OK]$(tput sgr0)"
-CER="$(tput setaf 1)[ERROR]$(tput sgr0)"
-CNT="$(tput setaf 3)[NOTE]$(tput sgr0)"
-CWR="$(tput setaf 166)[WARNING]$(tput sgr0)"
-CAT="$(tput setaf 6)[ACTION]$(tput sgr0)"
+
+CNT="[\e[1;36mNOTE\e[0m]"
+COK="[\e[1;32mOK\e[0m]"
+CER="[\e[1;31mERROR\e[0m]"
+CAT="[\e[1;37mATTENTION\e[0m]"
+CWR="[\e[1;35mWARNING\e[0m]"
+CAC="[\e[1;33mACTION\e[0m]"
 INSTLOG="install.log"
 
 
@@ -50,10 +52,10 @@ misc_stage=(
 	file-roller
 	flatpak
 	polkit-gnome
-        foot
+    foot
 	fzf
 	mdcat
-        noto-fonts-emoji
+    noto-fonts-emoji
 	playerctl
 	solaar
 	starship
@@ -201,12 +203,6 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 		install_software $AUR $SOFTWR
 	done
 
-	# Stage flatpak
-	echo -e "$CNT - installing flatpak applications"
-	for SOFTWR in ${flatpak_stage[@]}; do
-        flatpak install flathub -y $SOFTWR 
-    done
-
 	# Stage AUR - AUR applications
 	echo -e "$CNT - Installing AUR applications, this may take a while..."
 	for SOFTWR in ${aur_stage[@]}; do
@@ -218,6 +214,12 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	for SOFTWR in ${remove_stage[@]}; do
 		remove_software $SOFTWR
 	done
+
+	# Stage flatpak
+	echo -e "$CNT - installing flatpak applications"
+	for SOFTWR in ${flatpak_stage[@]}; do
+        flatpak install flathub -y $SOFTWR 
+    done
 
 	# Enable the sddm login manager service
 	echo -e "$CNT - Enabling the sddm Service..."
