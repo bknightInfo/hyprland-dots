@@ -50,12 +50,12 @@ misc_stage=(
 	file-roller
 	flatpak
 	polkit-gnome
+        foot
 	fzf
-	kitty
 	mdcat
-    noto-fonts-emoji
+        noto-fonts-emoji
 	playerctl
-	soloor
+	solaar
 	starship
 	swayidle
 	thunar-archive-plugin
