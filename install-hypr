@@ -2,12 +2,13 @@
 
 # ToDo - replace swwww to hyprpaper (https://github.com/hyprwm/hyprpaper)
 # set some colors
-CNT="[\e[1;36mNOTE\e[0m]"
-COK="[\e[1;32mOK\e[0m]"
-CER="[\e[1;31mERROR\e[0m]"
-CAT="[\e[1;37mATTENTION\e[0m]"
-CWR="[\e[1;35mWARNING\e[0m]"
+COK="$(tput setaf 2)[OK]$(tput sgr0)"
+CER="$(tput setaf 1)[ERROR]$(tput sgr0)"
+CNT="$(tput setaf 3)[NOTE]$(tput sgr0)"
+CWR="$(tput setaf 166)[WARNING]$(tput sgr0)"
+CAT="$(tput setaf 6)[ACTION]$(tput sgr0)"
 INSTLOG="install.log"
+
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 
@@ -15,9 +16,6 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 #system packages
 install_stage=(
 	brightnessctl
-	bluez
-	bluez-utils
-	blueman
 	cliphist
 	gcc12
 	grim
@@ -56,8 +54,8 @@ misc_stage=(
 	kitty
 	mdcat
     noto-fonts-emoji
-	papirus-icon-theme
 	playerctl
+	soloor
 	starship
 	swayidle
 	thunar-archive-plugin
@@ -85,11 +83,9 @@ remove_stage=(
 
 development_stage=(
     composer
-    github-desktop-bin 
     phpactor
     prettier  
-    npm 
-    mysql
+    npm
     vscodium-bin 
     vscodium-bin-marketplace
     yarn
@@ -101,6 +97,7 @@ flakpak_stage=(
 	io.github.celluloid_player.Celluloid
 	io.github.TheWisker.Cavasik
 	org.filezillaproject.Filezilla
+	org.gnome.Boxes
 	org.gnome.Loupe
 	org.mozilla.firefox
 	org.libreoffice.LibreOffice
@@ -163,10 +160,10 @@ install_software() {
 		$APP -S --noconfirm $2 &>>$INSTLOG
 		# test to make sure package installed
 		if $APP -Q $2 &>>/dev/null; then
-			echo -e "\e[1A\e[K$COK - $2 was installed."
+			echo -e "$COK - $2 was installed."
 		else
 			# if this is hit then a package is missing, exit to review log
-			echo -e "\e[1A\e[K$CER - $2 install had failed, please check the install.log"
+			echo -e "$CER - $2 install had failed, please check the install.log"
 			exit
 		fi
 	fi
@@ -181,7 +178,7 @@ remove_software() {
 }
 
 ### Install all of the above pacakges ####
-read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
+read -n1 -rep "${CAT} - Would you like to install the packages? (y,n) " INST
 if [[ $INST == "Y" || $INST == "y" ]]; then
 	# Stage 1 - main components
 	echo -e "$CNT - Installing main components, this may take a while..."
@@ -222,19 +219,26 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 		remove_software $SOFTWR
 	done
 
-	# Start the bluetooth service
-	echo -e "$CNT - Starting the Bluetooth Service..."
-	sudo systemctl enable --now bluetooth.service &>>$INSTLOG
-	sleep 2
-
 	# Enable the sddm login manager service
 	echo -e "$CNT - Enabling the sddm Service..."
 	sudo systemctl enable sddm -f &>>$INSTLOG
 	sleep 2
 fi
 
+# BLUETOOTH
+read -n1 -rep "${CAT} Would you like to install Bluetooth? (y/n)" inst4
+if [[ $inst4 =~ ^[Yy]$ ]]; then
+  for SOFTWR in bluez bluez-utils blueman; do
+    install_software "pacman" $SOFTWR
+  done
+  printf " Activating Bluetooth Services...\n"
+  sudo systemctl enable --now bluetooth.service &>>$INSTLOG
+else
+  printf "${NOTE} No bluetooth packages installed..\n"
+fi
+
 ### Copy Config Files ###
-read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you like to copy config files? (y,n) ' CFG
+read -n1 -rep "${CAT} - Would you like to copy config files? (y,n) " CFG
 if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	echo -e "$CNT - Copying config files..."
 
@@ -325,7 +329,7 @@ do
 done
 fc-cache
 
-read -n1 -rep $'[\e[1;33mACTION\e[0m] - Install dev environment(PHP development)? [y/n] ' DEVAPP
+read -n1 -rep "${CAT} - Install dev environment(PHP development)? [y/n] ' DEVAPP
 if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 	echo -e "\n$CNT - Installing Dev applications, this may take a while..."
 	for SOFTWR in ${development_stage[@]}; do
