@@ -228,8 +228,8 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 fi
 
 # BLUETOOTH
-read -n1 -rep "${CAT} Would you like to install Bluetooth? (y/n)" inst4
-if [[ $inst4 =~ ^[Yy]$ ]]; then
+read -n1 -rep "${CAT} Would you like to install Bluetooth? (y/n)" BLUETOOTH
+if [[ $BLUETOOTH =~ ^[Yy]$ ]]; then
   for SOFTWR in bluez bluez-utils blueman; do
     install_software "pacman" $SOFTWR
   done
@@ -313,7 +313,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	sudo cp -r Extras/darkmatter /boot/grub/themes/
 	echo -e 'GRUB_THEME="/boot/grub/themes/darkmatter/theme.txt"' | sudo tee -a /etc/default/grub &>>$INSTLOG
 	echo -e 'GRUB_DISABLE_OS_PROBER=false' | sudo tee -a /etc/default/grub &>>$INSTLOG
-	sudo grub-mkconfig -o /boot/grub/grub.cfg &>>$INSTLOG
+	sudo grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
 ### install nerd fonts

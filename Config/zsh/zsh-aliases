@@ -1,7 +1,4 @@
 #!/bin/sh
-alias j='z'
-alias f='zi'
-alias g='lazygit'
 alias zsh-update-plugins="find "$ZDOTDIR/plugins" -type d -exec test -e '{}/.git' ';' -print0 | xargs -I {} -0 git -C {} pull -q"
 
 # get fastest mirrors
@@ -57,12 +54,6 @@ alias update='sudo pacman -Syyu'
 alias clrcache='sudo pacman -Scc'
 alias updb='paru && sudo pacman -Sy'
 alias orphans='sudo pacman -Rns $(pacman -Qtdq)'
-
-#Paru as aur helper - updates everything
-alias pget='paru -S '
-alias prm='paru -Rsns '
-alias psr='paru -Ss '
-alias upall='paru -Syyu --noconfirm'
 
 #Yay skipping keys check (use at own risk)
 alias yayskip="yay -S --mflags --skipinteg " 
@@ -124,8 +115,8 @@ alias phpd='cd ~/Documents/Development'
 #laravel alias
 alias pa='php artisan'
 alias serve='php artisan serve'
-alias pam='php artisan migrate'
-alias pamf='php artisan migrate:fresh'
+alias migrate='php artisan migrate'
+alias migratef='php artisan migrate:fresh'
 alias pamm='php artisan make:migration'
 alias model='php artisan make:model'
 alias cntrl='php artisan make:controller'
