@@ -6,10 +6,10 @@
 CNT="[\e[1;36mNOTE\e[0m]"
 COK="[\e[1;32mOK\e[0m]"
 CER="[\e[1;31mERROR\e[0m]"
-CAT="[\e[1;37mATTENTION\e[0m]"
+CAT="$(tput setaf 6)[ATTENTION]$(tput sgr0)"
 CWR="[\e[1;35mWARNING\e[0m]"
 CAC="[\e[1;33mACTION\e[0m]"
-INSTLOG="install.log"
+INSTLOG="postinstall-$(date +%d-%H%M%S).log"
 
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
@@ -85,6 +85,7 @@ remove_stage=(
 
 development_stage=(
     composer
+	filezilla
     phpactor
     prettier  
     npm
@@ -98,15 +99,14 @@ flakpak_stage=(
 	com.github.tchx84.Flatseal
 	io.github.celluloid_player.Celluloid
 	io.github.TheWisker.Cavasik
-	org.filezillaproject.Filezilla
 	org.gnome.Boxes
 	org.gnome.Loupe
-	org.mozilla.firefox
 	org.libreoffice.LibreOffice
 )
 
 aur_applications=(
 	brave-bin
+	firefox
 	spotify-edge
 )
 
@@ -143,8 +143,6 @@ else
 fi
 
 # function that will test for a package and if not found it will attempt to install it
-# $1 - pacman paru or yay
-# $2 - software
 install_software() {
 	case $1 in
 	pacman)
@@ -205,7 +203,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 
 	# Stage AUR - AUR applications
 	echo -e "$CNT - Installing AUR applications, this may take a while..."
-	for SOFTWR in ${aur_stage[@]}; do
+	for SOFTWR in ${aur_applications[@]}; do
 		install_software $AUR $SOFTWR
 	done
 
