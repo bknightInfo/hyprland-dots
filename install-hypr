@@ -107,6 +107,9 @@ flakpak_stage=(
 aur_applications=(
 	brave-bin
 	firefox
+	noto-fonts-cjk 
+	noto-fonts-emoji 
+	noto-fonts
 	spotify-edge
 )
 
