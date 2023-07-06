@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # ToDo - replace swwww to hyprpaper (https://github.com/hyprwm/hyprpaper)
+# ToDO - Merge enki theme into sublime via script (https://github.com/enkia/enki-theme) - not sure how to do this yet
 # set some colors
 
 CNT="[\e[1;36mNOTE\e[0m]"
@@ -17,6 +18,9 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 # Define the software that would be installed
 #system packages
 install_stage=(
+	bluez 
+	bluez-utils 
+	blueman
 	brightnessctl
 	cliphist
 	gcc12
@@ -96,17 +100,19 @@ development_stage=(
 
 # feel free to modify
 flakpak_stage=(
+	com.brave.Browser
 	com.github.tchx84.Flatseal
+	com.sublimetext.three
 	io.github.celluloid_player.Celluloid
 	io.github.TheWisker.Cavasik
 	org.gnome.Boxes
 	org.gnome.Loupe
+	org.mozilla.firefox
 	org.libreoffice.LibreOffice
 )
 
 aur_applications=(
-	brave-bin
-	firefox
+	cava
 	noto-fonts-cjk 
 	noto-fonts-emoji 
 	noto-fonts
@@ -226,18 +232,11 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	echo -e "$CNT - Enabling the sddm Service..."
 	sudo systemctl enable sddm -f &>>$INSTLOG
 	sleep 2
-fi
 
-# BLUETOOTH
-read -n1 -rep "${CAT} Would you like to install Bluetooth? (y/n)" BLUETOOTH
-if [[ $BLUETOOTH =~ ^[Yy]$ ]]; then
-  for SOFTWR in bluez bluez-utils blueman; do
-    install_software "pacman" $SOFTWR
-  done
-  printf " Activating Bluetooth Services...\n"
-  sudo systemctl enable --now bluetooth.service &>>$INSTLOG
-else
-  printf "${NOTE} No bluetooth packages installed..\n"
+	# BLUETOOTH
+	printf " Activating Bluetooth Services...\n"
+  	sudo systemctl enable --now bluetooth.service &>>$INSTLOG
+	sleep 2
 fi
 
 ### Copy Config Files ###
