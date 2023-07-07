@@ -99,7 +99,7 @@ development_stage=(
 )
 
 # feel free to modify
-flakpak_stage=(
+flatpak_stage=(
 	com.brave.Browser
 	com.github.tchx84.Flatseal
 	com.sublimetext.three
