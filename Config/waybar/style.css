@@ -135,3 +135,10 @@ window#waybar {
     padding-left: 15px;
     color: #FF3E96;
 }
+#custom-cava-internal {
+  border-radius: 10px;
+  color: #e0af68;
+  border-style: solid;
+  opacity: 1;
+  margin: 8px 0;
+}

@@ -93,6 +93,7 @@ development_stage=(
     phpactor
     prettier  
     npm
+	sublime-text-4
     vscodium-bin 
     vscodium-bin-marketplace
     yarn
@@ -100,11 +101,8 @@ development_stage=(
 
 # feel free to modify
 flatpak_stage=(
-	com.brave.Browser
 	com.github.tchx84.Flatseal
-	com.sublimetext.three
 	io.github.celluloid_player.Celluloid
-	io.github.TheWisker.Cavasik
 	org.gnome.Boxes
 	org.gnome.Loupe
 	org.mozilla.firefox
@@ -112,6 +110,7 @@ flatpak_stage=(
 )
 
 aur_applications=(
+	brave-bin
 	cava
 	noto-fonts-cjk 
 	noto-fonts-emoji 

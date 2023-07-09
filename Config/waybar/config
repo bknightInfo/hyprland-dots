@@ -14,13 +14,13 @@
         "wlr/workspaces",
         "cpu", 
         "memory", 
-        "temperature",
+        "custom/cava-internal",
         "custom/rightside"
         ],
     "modules-center": [
         "custom/leftside",
         "hyprland/window",
-        "custom/cava",
+        "clock",
         "custom/spotify",
         "custom/rightside"
         ],
@@ -30,8 +30,6 @@
         "custom/keybindings",
         "custom/updates",
         "pulseaudio",
-        "gamemode",
-        "clock",
         "custom/weather",
         "custom/power",
         "custom/rightside"
@@ -66,7 +64,7 @@
     },
 
     "hyprland/window": {
-        "format": "➡ {}",
+        "format": "➡ {} | ",
         "separate-outputs": true
     },
 
@@ -80,28 +78,14 @@
         }
     },
 
-    "custom/cava": {
-      //  "cava_config": "~/.config/cava/cava.conf",
-        "framerate": 60,
-        "autosens": 1,
-            "sensitivity": 100,
-            "bars": 14,
-            "lower_cutoff_freq": 50,
-            "higher_cutoff_freq": 10000,
-            "method": "pulse",
-            "source": "auto",
-            "stereo": true,
-            "reverse": false,
-            "bar_delimiter": 0,
-            "monstercat": false,
-            "waves": false,
-            "noise_reduction": 0.77,
-            "input_delay": 2,
-            "format-icons" : ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" ],
-            "actions": {
-                "on-click-right": "mode"
-                }
-    },
+    "custom/cava-internal": {
+        "exec": "sh ~/.config/waybar/scripts/cava.sh",
+        "format": "{}",
+        "tooltip": false,
+        "on-click": "playerctl pkill waybar & waybar",
+        "layer": "below",
+        "output": "all"
+    }, 
 
     "tray": {
         "icon-size": 15,
@@ -125,12 +109,6 @@
 	"interval": 30,
         "format": " {}%",
         "tooltip": false
-    },
-
-    "temperature": {
-        "thermal-zone": 1,
-        "critical-threshold": 90,
-        "format": " {temperatureC}°C",
     },
 
     "backlight": {
@@ -184,7 +162,7 @@
 
     "custom/power":{
         "format":"⏻ ",
-        "on-click": "$HOME/.config/waybar/scripts/powermenu",
+        "on-click": "wlogout --protocol layer-shell",
 
     },
     "custom/updates":{
@@ -218,13 +196,6 @@
         "exec": "~/.config/waybar/scripts/weather-get.sh",
         "exec-if": "ping wttr.in -c1"
     },
-   "custom/weather1" : {
-        "tooltip" : true,
-        "format" : "{}",
-        "interval" : 30,
-        "exec" : "python3 ~/.config/waybar/scripts/weather1.py",
-        "return-type" : "json"
-    },
     "custom/media": {
         "format": "{icon} {}",
         "return-type": "json",
@@ -238,26 +209,9 @@
         // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
     },
 
-    "gamemode": {
-        "format": "{glyph}",
-        "format-alt": "{glyph} {count}",
-        "glyph": " ",
-        "hide-not-running": true,
-        "use-icon": true,
-        "icon-name": "input-gaming-symbolic",
-        "icon-spacing": 6,
-        "icon-size": 20,
-        "tooltip": true,
-        "tooltip-format": "Games running: {count}"
-    },
-
     "custom/keybindings": {
         "format":" ",
         "tooltip": false,
         "on-click": "$HOME/.config/waybar/scripts/keyhint"
-    },
-
-    "custom/tray": {
-        "format": "hello"
     }
 }
