@@ -103,15 +103,14 @@ development_stage=(
 flatpak_stage=(
 	com.github.tchx84.Flatseal
 	io.github.celluloid_player.Celluloid
-	org.gnome.Boxes
 	org.gnome.Loupe
-	org.mozilla.firefox
 	org.libreoffice.LibreOffice
 )
 
 aur_applications=(
 	brave-bin
 	cava
+	firefox
 	noto-fonts-cjk 
 	noto-fonts-emoji 
 	noto-fonts

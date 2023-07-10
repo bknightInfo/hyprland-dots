@@ -14,7 +14,7 @@
         "wlr/workspaces",
         "cpu", 
         "memory", 
-        "custom/cava-internal",
+        
         "custom/rightside"
         ],
     "modules-center": [
@@ -22,6 +22,7 @@
         "hyprland/window",
         "clock",
         "custom/spotify",
+        "custom/cava-internal",
         "custom/rightside"
         ],
     "modules-right": [
@@ -82,7 +83,6 @@
         "exec": "sh ~/.config/waybar/scripts/cava.sh",
         "format": "{}",
         "tooltip": false,
-        "on-click": "playerctl pkill waybar & waybar",
         "layer": "below",
         "output": "all"
     }, 
@@ -94,7 +94,7 @@
 
     "clock": {
         "interval": 1,
-        "format": "{:  %a %d %b | %I:%M %p}",
+        "format": "{:  %a %d %b | %I:%M %p} |",
         "tooltip": true,
         "tooltip-format": "<big>{:%B %Y \t}</big>\n<tt>{calendar}</tt>",
     },
