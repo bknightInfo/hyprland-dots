@@ -56,11 +56,6 @@ window#waybar {
   padding-left: 10px;
   padding-right: 10px;
 }
-#temperature {
-  color: #b4befe;
-  padding-left: 10px;
-  padding-right: 5px;
-}
 #clock {
     color: #c0caf5;
     padding-left: 5px;
@@ -85,11 +80,6 @@ window#waybar {
     color: #e0af68;
     padding-left: 5px;
     padding-right: 10px;
-}
-#custom-gamemode {
-    padding-right: 10px;
-    transition: none;
-    color: #41a6b5;
 }
 #custom-screenshot {
     padding-left: 20px;
@@ -140,5 +130,4 @@ window#waybar {
   color: #e0af68;
   border-style: solid;
   opacity: 1;
-  margin: 8px 0;
 }

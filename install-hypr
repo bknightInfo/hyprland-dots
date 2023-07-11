@@ -34,7 +34,6 @@ install_stage=(
 	pipewire
 	pavucontrol
 	network-manager-applet
-	sddm
 	slurp
 	thunar
 	wget
@@ -53,15 +52,11 @@ misc_stage=(
 	htop
 	capitaine-cursors
 	exa
-	file-roller
 	flatpak
 	polkit-gnome
     foot
 	fzf
 	mdcat
-    noto-fonts-emoji
-	playerctl
-	solaar
 	starship
 	swayidle
 	thunar-archive-plugin
@@ -72,7 +67,11 @@ misc_stage=(
 aur_stage=(
 	fnm-bin
 	grimblast
+	noto-fonts-cjk 
+	noto-fonts-emoji 
+	noto-fonts
 	nwg-look-bin
+	sddm-git
 	sddm-config-editor-git
 	swaync
 	swaylock-effects
@@ -93,28 +92,27 @@ development_stage=(
     phpactor
     prettier  
     npm
-	sublime-text-4
     vscodium-bin 
     vscodium-bin-marketplace
     yarn
 )
 
-# feel free to modify
+# feel free to modify bellow applications
 flatpak_stage=(
+	com.brave.Browser
 	com.github.tchx84.Flatseal
+	org.mozilla.firefox
 	io.github.celluloid_player.Celluloid
 	org.gnome.Loupe
 	org.libreoffice.LibreOffice
 )
 
 aur_applications=(
-	brave-bin
 	cava
-	firefox
-	noto-fonts-cjk 
-	noto-fonts-emoji 
-	noto-fonts
+	file-roller
 	spotify-edge
+	playerctl
+	solaar
 )
 
 nerd_fonts=( 
