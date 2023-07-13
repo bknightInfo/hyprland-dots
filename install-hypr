@@ -48,15 +48,13 @@ misc_stage=(
 	exa
 	flatpak
 	polkit-gnome
-    foot
+        foot
 	fzf
 	mdcat
 	starship
 	solaar
 	swayidle
 	thunar
-	thunar-archive-plugin
-	tumbler 
 	neofetch
 	neovim
 	zsh
@@ -65,15 +63,11 @@ misc_stage=(
 )
 
 aur_stage=(
-	fnm
 	grimblast
 	sddm-git
 	swaync
 	swaylock-effects
 	swww
-	thunar-media-tags-plugin
-	thunar-shares-plugin 
-	tumbler-extra-thumbnailers
 	waybar-hyprland-git
 	wlogout
 	zsh-autocomplete-git
@@ -86,13 +80,9 @@ remove_stage=(
 
 development_stage=(
     composer
-	filezilla
     phpactor
-    prettier  
-    npm
     vscodium-bin 
     vscodium-bin-marketplace
-    yarn
 )
 
 # feel free to add more flatpaks. I'm think about removing flatpaks
@@ -221,8 +211,8 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	# Stage flatpak
 	echo -e "$CNT - installing flatpak applications"
 	for SOFTWR in ${flatpak_stage[@]}; do
-        flatpak install flathub -y $SOFTWR 
-    done
+             flatpak install flathub -y $SOFTWR 
+        done
 
 	# Enable the sddm login manager service
 	echo -e "$CNT - Enabling the sddm Service..."
@@ -341,15 +331,10 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 	done
 
 	DEVDIR=~/Documents/Development/
-	if [ -d "$DEVDIR" ]; then
-		echo -e "$COK - $DEVDIR found"
-	else
+	if [ ! -d "$DEVDIR" ]; then
 		echo -e "$CWR - $DEVDIR creating folder..."
 		mkdir -p $DEVDIR
 	fi
-
-	#PHP plugin
-	sudo npm install --global --force prettier @prettier/plugin-php
 
 	#phpstan -- currently not wotking in the aur
 	wget https://github.com/phpstan/phpstan/releases/download/1.10.14/phpstan.phar
