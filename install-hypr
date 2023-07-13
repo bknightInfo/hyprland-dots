@@ -264,7 +264,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 
 	BINDIR=~/.local/bin
 	if [ ! -d "$BINDIR" ]; then
-		mkdir -p ~/.backups &>>$INSTLOG
+		mkdir -p $BINDIR &>>$INSTLOG
 	fi	
 
 	cat <<EOF | crontab -    
@@ -272,7 +272,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 EOF
 
 	### backup script ###
-	cp Extras/autobackup.sh ~/.local/bin
+	cp Extras/autobackup.sh ~/.local/bin/
 
 	### Install the starship shell ###
 	cp Extras/starship.toml ~/.config/
