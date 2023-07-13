@@ -65,7 +65,7 @@ misc_stage=(
 )
 
 aur_stage=(
-	fnm-bin
+	fnm
 	grimblast
 	sddm-git
 	swaync
