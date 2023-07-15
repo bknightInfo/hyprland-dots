@@ -7,6 +7,7 @@ CER="[\e[1;31mERROR\e[0m]"
 CAT="$(tput setaf 6)[ATTENTION]$(tput sgr0)"
 CWR="[\e[1;35mWARNING\e[0m]"
 CAC="[\e[1;33mACTION\e[0m]"
+
 INSTLOG="postinstall-$(date +%d-%H%M%S).log"
 
 
@@ -48,21 +49,18 @@ misc_stage=(
 	exa
 	flatpak
 	polkit-gnome
-        foot
+    foot
 	fzf
-	mdcat
 	starship
-	solaar
 	swayidle
-	thunar
 	neofetch
-	neovim
 	zsh
 	zsh-completions
 	zsh-syntax-highlighting
 )
 
 aur_stage=(
+	fnm
 	grimblast
 	sddm-git
 	swaync
@@ -81,33 +79,37 @@ remove_stage=(
 development_stage=(
     composer
     phpactor
+	neovim
+	npm
     vscodium-bin 
     vscodium-bin-marketplace
 )
 
-# feel free to add more flatpaks. I'm think about removing flatpaks
+# feel free to add more flatpaks. 
 flatpak_stage=(
+	com.brave.Browser
 	com.github.tchx84.Flatseal
 	io.github.celluloid_player.Celluloid
+	io.gitlab.librewolf-community
+	org.gnome.FileRoller
 	org.gnome.Loupe
 	org.libreoffice.LibreOffice
 )
 
 aur_applications=(
-	brave-bin
 	cava
-	firefox
-	file-roller
 	noto-fonts
 	noto-fonts-cjk 
 	noto-fonts-emoji 
 	noto-fonts-extra
 	sddm-config-editor-git
+	solaar
 	spotify-edge
+	thunar
 	playerctl
 )
 
-#My 5 favorate nerd fonts
+#My top 5 favorate nerd fonts
 nerd_fonts=( 
 	CascadiaCode
 	FiraCode
@@ -211,11 +213,11 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	# Stage flatpak
 	echo -e "$CNT - installing flatpak applications"
 	for SOFTWR in ${flatpak_stage[@]}; do
-             flatpak install flathub -y $SOFTWR 
-        done
+        flatpak install flathub -y $SOFTWR 
+    done
 
 	# Enable the sddm login manager service
-	echo -e "$CNT - Enabling the sddm Service..."
+	echo -e "$CNT - Activating sddm Service..."
 	sudo systemctl enable sddm -f &>>$INSTLOG
 	sleep 2
 
@@ -256,20 +258,6 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	if [ ! -d "$WLDIR" ]; then
 		sudo mkdir $WLDIR
 	fi
-	
-	BACKUP=~/.backups/
-	if [ ! -d "$BACKUP" ]; then
-		mkdir -p $BACKUP &>>$INSTLOG
-	fi	
-
-	BINDIR=~/.local/bin
-	if [ ! -d "$BINDIR" ]; then
-		mkdir -p $BINDIR &>>$INSTLOG
-	fi	
-
-	cat <<EOF | crontab -    
-30 0 * * 7 sh ~/.local/bin/autobackup.sh 
-EOF
 
 	### backup script ###
 	cp Extras/autobackup.sh ~/.local/bin/
@@ -281,11 +269,6 @@ EOF
 	sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf &>>$INSTLOG
 	sudo sed -i 's/^#Color/Color/' /etc/pacman.conf &>>$INSTLOG
 	sudo sed -i '/^ParallelDownloads = .*/a ILoveCandy' /etc/pacman.conf &>>$INSTLOG
-
-	#setup atronvim config
-	echo -e "$CNT - Setting up AstroNvim"
-	git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim &>>$INSTLOG
-	git clone --depth 1 https://github.com/bknightInfo/astrovim_files ~/.config/nvim/lua/user &>>$INSTLOG
 
 	# setup gtk theming
 	mkdir -p ~/.local/share/themes/
@@ -311,17 +294,35 @@ EOF
 	echo -e 'GRUB_THEME="/boot/grub/themes/darkmatter/theme.txt"' | sudo tee -a /etc/default/grub &>>$INSTLOG
 	echo -e 'GRUB_DISABLE_OS_PROBER=false' | sudo tee -a /etc/default/grub &>>$INSTLOG
 	sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+	#flatpak fix
+	sudo flatpak override --filesystem=xdg-data/themes
+
+	### install nerd fonts
+	mkdir -p ~/.local/share/fonts
+	for font in ${nerd_fonts[@]}
+	do
+		wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/$font.zip
+		unzip $font.zip -d $HOME/.local/share/fonts/$font/
+		rm $font.zip
+	done
+	fc-cache
 fi
 
-### install nerd fonts
-mkdir -p ~/.local/share/fonts
-for font in ${nerd_fonts[@]}
-do
-    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/$font.zip
-	unzip $font.zip -d $HOME/.local/share/fonts/$font/
-    rm $font.zip
-done
-fc-cache
+read -n1 -rep "${CAT} - Install backup script? [y/n] " BACKUPCRON
+if [[ $BACKUPCRON == "Y" || $BACKUPCRON == "y" ]]; then
+	BACKUP=~/.backups/
+	if [ ! -d "$BACKUP" ]; then
+		mkdir -p $BACKUP &>>$INSTLOG
+	fi	
+	BINDIR=~/.local/bin
+	if [ ! -d "$BINDIR" ]; then
+		mkdir -p $BINDIR &>>$INSTLOG
+	fi	
+	cat <<EOF | crontab -    
+30 0 * * 7 sh ~/.local/bin/autobackup.sh 
+EOF
+fi
 
 read -n1 -rep "${CAT} - Install dev environment(PHP development)? [y/n] " DEVAPP
 if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
@@ -335,6 +336,11 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 		echo -e "$CWR - $DEVDIR creating folder..."
 		mkdir -p $DEVDIR
 	fi
+
+	#setup atronvim config
+	echo -e "$CNT - Setting up AstroNvim"
+	git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim &>>$INSTLOG
+	git clone --depth 1 https://github.com/bknightInfo/astrovim_files ~/.config/nvim/lua/user &>>$INSTLOG
 
 	#phpstan -- currently not wotking in the aur
 	wget https://github.com/phpstan/phpstan/releases/download/1.10.14/phpstan.phar
