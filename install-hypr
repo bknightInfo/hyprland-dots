@@ -51,6 +51,7 @@ misc_stage=(
 	polkit-gnome
     foot
 	fzf
+	gnome-keyring
 	starship
 	swayidle
 	neofetch
