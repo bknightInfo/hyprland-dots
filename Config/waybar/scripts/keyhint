@@ -1,2 +1,0 @@
-#!/bin/sh
-foot -T=cheatsheet --hold -e mdcat ~/.config/waybar/scripts/cheatsheet.md

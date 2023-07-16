@@ -130,3 +130,4 @@ alias watch='npm run watch'
 alias dev='npm run dev'
 alias cr='composer require'
 
+alias matrix='unimatrix'
