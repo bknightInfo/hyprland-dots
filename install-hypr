@@ -261,6 +261,11 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 		sudo mkdir $WLDIR
 	fi
 
+	BACKUPD=~/.local/bin/
+	if [ ! -d "$BACKUPD" ]; then
+		mkdir $BACKUPD
+	fi
+
 	### backup script ###
 	cp Extras/autobackup.sh ~/.local/bin/
 
@@ -273,7 +278,10 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	sudo sed -i '/^ParallelDownloads = .*/a ILoveCandy' /etc/pacman.conf &>>$INSTLOG
 
 	# setup gtk theming
-	mkdir -p ~/.local/share/themes/
+	THEMES=~/.local/share/themes/
+	if [ ! -d "$THEMES" ]; then
+		mkdir -p $THEMES
+	fi
 	git clone https://github.com/yeyushengfan258/Miya-icon-theme.git &>>$INSTLOG
 	Miya-icon-theme/install.sh -black &>>$INSTLOG
 	rm -rf Miya-icon-theme &>>$INSTLOG
