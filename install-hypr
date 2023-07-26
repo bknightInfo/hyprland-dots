@@ -269,6 +269,11 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 		mkdir $BACKUPD
 	fi
 
+	### install custom powermenu script ###
+	cp -p Extras/powermenu.py ~/.local/bin/powermenu
+	chmod 755 ~/.local/bin/powermenu 
+	cp -p Extras/PowerMenu.desktop ~/.local/share/applications/PowerMenu.desktop 
+
 	### backup script ###
 	cp Extras/autobackup.sh ~/.local/bin/
 
