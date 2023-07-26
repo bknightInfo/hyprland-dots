@@ -18,4 +18,4 @@ cd hyprland-dots
 
 ## Notes:
 
-I used mrbman repository (https://github.com/mrbman/hyprland-dotfiles) as a base to start my hyprland my journey plus I also acknowledge soldoestech (https://github.com/SolDoesTech) for inspiration for the installer.   
+I used mrbman repository (https://github.com/mrbman/hyprland-dotfiles) as a base to start my hyprland my journey.

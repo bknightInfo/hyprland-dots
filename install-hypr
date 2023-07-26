@@ -23,6 +23,7 @@ install_stage=(
 	cronie
 	gcc12
 	grim
+	gtk3
 	gvfs
 	hyprland
 	mako
@@ -32,6 +33,7 @@ install_stage=(
 	pamixer
 	pipewire
 	pavucontrol
+	python-gobject
 	rsync
 	slurp
 	wget
@@ -70,6 +72,7 @@ aur_stage=(
 	waybar-hyprland-git
 	wlogout
 	zsh-autocomplete-git
+	tk
 )
 
 remove_stage=(
@@ -138,8 +141,8 @@ if [ ! -n "$ISAUR" ]; then
 	cd $SCRIPT_DIR
 	rm -rf paru-bin &>>$INSTLOG
 	echo -e "$COK - Paru installed."
-	AUR="paru"
 fi
+AUR="paru"
 
 # function that will test for a package and if not found it will attempt to install it
 install_software() {
