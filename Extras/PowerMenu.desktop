@@ -1,5 +1,9 @@
 [Desktop Entry]
+Version=1.0
 Type=Application
 Name=PowerMenu
 Exec=powermenu
 Icon=video-display
+NoDisplay=false
+Categories=Utility;
+Keywords=GTK;

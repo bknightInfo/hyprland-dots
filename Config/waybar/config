@@ -29,8 +29,8 @@
         "custom/wallpaper",
         "custom/updates",
         "pulseaudio",
-        "clock",
         "custom/weather",
+        "clock",
         "custom/power",
         "custom/rightside"
 	]

@@ -70,7 +70,6 @@ aur_stage=(
 	swaylock-effects
 	swww
 	waybar-hyprland-git
-	wlogout
 	zsh-autocomplete-git
 	tk
 )
