@@ -43,7 +43,7 @@ class PowerMenu(Gtk.Window):
         bhibernate.connect("clicked", self.hibernate)
         bhibernate.set_tooltip_text("Hibernate")
         box.pack_start(bhibernate, True, True, 0)
- 
+
         sleepIcon = Gtk.IconTheme.get_default().load_icon("preferences-desktop-screensaver-symbolic", 256, 0)
         # Could not find a "suspend icon" so had to make do with this
         sleepImage = Gtk.Image()
@@ -92,15 +92,15 @@ class PowerMenu(Gtk.Window):
     def hibernate(self, widget):
         subprocess.Popen(["systemctl", "hibernate", "-i"])
         Gtk.main_quit()
-    
+
     def sleep(self, widget):
         subprocess.Popen(["systemctl", "suspend", "-i"])
         Gtk.main_quit()
-    
+
     def lock(self, widget):
         subprocess.Popen(["swaylock"])
         Gtk.main_quit()
-    
+
     def logout(self, widget):
         subprocess.Popen(["killall", "Hyprland"])
         Gtk.main_quit()

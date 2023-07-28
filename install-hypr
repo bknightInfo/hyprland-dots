@@ -10,14 +10,13 @@ CAC="[\e[1;33mACTION\e[0m]"
 
 INSTLOG="postinstall-$(date +%d-%H%M%S).log"
 
-
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 
 # Define the software that would be installed
 #system packages
 install_stage=(
-	bluez 
-	bluez-utils 
+	bluez
+	bluez-utils
 	blueman
 	cliphist
 	cronie
@@ -33,6 +32,7 @@ install_stage=(
 	pamixer
 	pipewire
 	pavucontrol
+	plymouth
 	python-gobject
 	rsync
 	slurp
@@ -51,7 +51,7 @@ misc_stage=(
 	exa
 	flatpak
 	polkit-gnome
-    foot
+	foot
 	fzf
 	gnome-keyring
 	starship
@@ -65,6 +65,7 @@ misc_stage=(
 aur_stage=(
 	fnm
 	grimblast
+	plymouth-theme-dark-arch
 	sddm-git
 	swaync
 	swaylock-effects
@@ -80,18 +81,21 @@ remove_stage=(
 )
 
 development_stage=(
-    composer
-    phpactor
+	composer
+	phpactor
 	neovim
 	npm
-    vscodium-bin 
-    vscodium-bin-marketplace
 )
+	# might switch code for codium
+	#vscodium-bin
+	#vscodium-bin-marketplace
 
-# feel free to add more flatpaks. 
+
+# feel free to add more flatpaks.
 flatpak_stage=(
 	com.brave.Browser
 	com.github.tchx84.Flatseal
+	com.visualstudio.code
 	io.github.celluloid_player.Celluloid
 	io.gitlab.librewolf-community
 	org.gnome.FileRoller
@@ -102,8 +106,8 @@ flatpak_stage=(
 aur_applications=(
 	cava
 	noto-fonts
-	noto-fonts-cjk 
-	noto-fonts-emoji 
+	noto-fonts-cjk
+	noto-fonts-emoji
 	noto-fonts-extra
 	sddm-config-editor-git
 	solaar
@@ -114,7 +118,7 @@ aur_applications=(
 )
 
 #My top 5 favorate nerd fonts
-nerd_fonts=( 
+nerd_fonts=(
 	CascadiaCode
 	FiraCode
 	JetBrainsMono
@@ -173,7 +177,8 @@ install_software() {
 #remove unwanted applications
 remove_software() {
 	if $APP -Q $1 &>>/dev/null; then
-		sudo pacman -Rcns --noconfirm $1 &>>$INSTLOG
+		su	vscodium-bin
+	vscodium-bin-marketplacedo pacman -Rcns --noconfirm $1 &>>$INSTLOG
 		echo -e "$COK - $1 removed."
 	fi
 }
@@ -217,8 +222,8 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	# Stage flatpak
 	echo -e "$CNT - installing flatpak applications"
 	for SOFTWR in ${flatpak_stage[@]}; do
-        flatpak install flathub -y $SOFTWR 
-    done
+		flatpak install flathub -y $SOFTWR
+	done
 
 	# Enable the sddm login manager service
 	echo -e "$CNT - Activating sddm Service..."
@@ -227,7 +232,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 
 	# Enable the Bluetooth service
 	echo -e "$CNT - Activating Bluetooth Services...\n"
-  	sudo systemctl enable --now bluetooth.service &>>$INSTLOG
+	sudo systemctl enable --now bluetooth.service &>>$INSTLOG
 	sleep 2
 fi
 
@@ -270,8 +275,8 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 
 	### install custom powermenu script ###
 	cp -p Extras/powermenu.py ~/.local/bin/powermenu
-	chmod 755 ~/.local/bin/powermenu 
-	cp -p Extras/PowerMenu.desktop ~/.local/share/applications/PowerMenu.desktop 
+	chmod 755 ~/.local/bin/powermenu
+	cp -p Extras/PowerMenu.desktop ~/.local/share/applications/PowerMenu.desktop
 
 	### backup script ###
 	cp Extras/autobackup.sh ~/.local/bin/
@@ -295,7 +300,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 
 	git clone https://github.com/Fausto-Korpsvart/Tokyo-Night-GTK-Theme.git &>>$INSTLOG
 	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Dark-B ~/.local/share/themes/
-	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Storm-B ~/.local/share/themes/ 
+	cp -r Tokyo-Night-GTK-Theme/themes/Tokyonight-Storm-B ~/.local/share/themes/
 	rm -rf Tokyo-Night-GTK-Theme &>>$INSTLOG
 
 	# setup the first look and feel as dark
@@ -305,20 +310,34 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	gsettings set org.gnome.desktop.interface icon-theme "Miya-black-dark" &>>$INSTLOG
 	gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors &>>$INSTLOG
 
+	#Systemd-boot theming
+	FIND="HOOKS=(base systemd autodetect keyboard sd-vconsole modconf block filesystems fsck)"
+	REPLACE="HOOKS=(base systemd plymouth autodetect keyboard sd-vconsole modconf block filesystems fsck)" 
+	sudo sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
+
+	#needs more testing
+	#FIND="options initrd=initramfs-linux.img"
+	#REPLACE="options initrd=initramfs-linux.img quiet splash vt.global_cursor_default=0"
+	#sudo sed -i "s/$FIND/$REPLACE/g" /boot/loader/entries/arch-linux.conf
+
+	sudo plymouth-set-default-theme -R dark-arch
+
+	sudo mkinitcpio -P
+
+	#stopped using grub becuase of the issues on arch
 	#grub theme
 	#https://gitlab.com/VandalByte/darkmatter-grub-theme
-	sudo cp -r Extras/darkmatter /boot/grub/themes/
-	echo -e 'GRUB_THEME="/boot/grub/themes/darkmatter/theme.txt"' | sudo tee -a /etc/default/grub &>>$INSTLOG
-	echo -e 'GRUB_DISABLE_OS_PROBER=false' | sudo tee -a /etc/default/grub &>>$INSTLOG
-	sudo grub-mkconfig -o /boot/grub/grub.cfg
+	#sudo cp -r Extras/darkmatter /boot/grub/themes/
+	#echo -e 'GRUB_THEME="/boot/grub/themes/darkmatter/theme.txt"' | sudo tee -a /etc/default/grub &>>$INSTLOG
+	#echo -e 'GRUB_DISABLE_OS_PROBER=false' | sudo tee -a /etc/default/grub &>>$INSTLOG
+	#sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 	#flatpak fix
 	sudo flatpak override --filesystem=xdg-data/themes
 
 	### install nerd fonts
 	mkdir -p ~/.local/share/fonts
-	for font in ${nerd_fonts[@]}
-	do
+	for font in ${nerd_fonts[@]}; do
 		wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/$font.zip
 		unzip $font.zip -d $HOME/.local/share/fonts/$font/
 		rm $font.zip
@@ -331,12 +350,12 @@ if [[ $BACKUPCRON == "Y" || $BACKUPCRON == "y" ]]; then
 	BACKUP=~/.backups/
 	if [ ! -d "$BACKUP" ]; then
 		mkdir -p $BACKUP &>>$INSTLOG
-	fi	
+	fi
 	BINDIR=~/.local/bin
 	if [ ! -d "$BINDIR" ]; then
 		mkdir -p $BINDIR &>>$INSTLOG
-	fi	
-	cat <<EOF | crontab -    
+	fi
+	cat <<EOF | crontab -
 30 0 * * 7 sh ~/.local/bin/autobackup.sh 
 EOF
 fi
@@ -375,7 +394,7 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 	sudo sed -i 's/^;extension=mysqli/extension=mysqli/' /etc/php/php.ini &>>$INSTLOG
 	sudo sed -i 's/^;extension=pdo_mysql/extension=pdo_mysql/' /etc/php/php.ini &>>$INSTLOG
 	sudo sed -i 's/^;extension=iconv/extension=iconv/' /etc/php/php.ini &>>$INSTLOG
-fi 
+fi
 
 # Remove orphan files
 cd $HOME
