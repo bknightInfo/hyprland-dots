@@ -36,6 +36,7 @@ install_stage=(
 	python-gobject
 	rsync
 	slurp
+        unzip
 	wget
 	wireplumber
 	wl-clipboard
