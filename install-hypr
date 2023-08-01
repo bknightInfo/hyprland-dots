@@ -36,7 +36,7 @@ install_stage=(
 	python-gobject
 	rsync
 	slurp
-        unzip
+	unzip
 	wget
 	wireplumber
 	wl-clipboard
@@ -82,21 +82,18 @@ remove_stage=(
 )
 
 development_stage=(
-	composer
+	compose
 	phpactor
 	neovim
 	npm
+	vscodium-bin
+	vscodium-bin-marketplace
 )
-	# might switch code for codium
-	#vscodium-bin
-	#vscodium-bin-marketplace
-
 
 # feel free to add more flatpaks.
 flatpak_stage=(
 	com.brave.Browser
 	com.github.tchx84.Flatseal
-	com.visualstudio.code
 	io.github.celluloid_player.Celluloid
 	io.gitlab.librewolf-community
 	org.gnome.FileRoller
@@ -137,7 +134,7 @@ clear
 #### Check for package manager ####
 ISAUR=$(command -v paru)
 
-if [ ! -n "$ISAUR" ]; then
+if [ -z "$ISAUR" ]; then
 	echo -e "$CWR - Installing Paru"
 	git clone https://aur.archlinux.org/paru-bin.git &>>$INSTLOG
 	cd paru-bin &>>$INSTLOG
@@ -178,8 +175,8 @@ install_software() {
 #remove unwanted applications
 remove_software() {
 	if $APP -Q $1 &>>/dev/null; then
-		su	vscodium-bin
-	vscodium-bin-marketplacedo pacman -Rcns --noconfirm $1 &>>$INSTLOG
+		su vscodium-bin
+		vscodium-bin-marketplacedo pacman -Rcns --noconfirm $1 &>>$INSTLOG
 		echo -e "$COK - $1 removed."
 	fi
 }
@@ -245,12 +242,30 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	# update directories
 	xdg-user-dirs-update
 
-	# copy the defaults config
-	cp -R Config/* ~/.config/ &>>$INSTLOG
+	GITHUB="$HOME/Documents/MyGitHub"
+	if [ ! -d "$GITHUB" ]; then
+		mkdir -p $GITHUB
+	fi
 
-	#copy zsh core file
+	#download github projects
+	git clone https://github.com/bknightinfo/my-dots.git $HOME/Documents/MyGitHub/my-dots
+	git clone https://github.com/bknightinfo/arch_scripts.git $HOME/Documents/MyGitHub/my-scripts
+
+	# setting defaults config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/foot ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/gtk-3.0 ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/hypr ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/neofetch ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/nvim ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/swaylock ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/cava ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/waybar ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/zsh ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/starship.toml ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/.zshrc ~/
+
+	#switch to zsh shell
 	chsh -s $(which zsh)
-	cp Extras/.zshrc ~/
 
 	# stage the .desktop file
 	sudo mv Extras/hyprland.desktop /usr/share/wayland-sessions/ &>>$INSTLOG
@@ -282,9 +297,6 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	### backup script ###
 	cp Extras/autobackup.sh ~/.local/bin/
 
-	### Install the starship shell ###
-	cp Extras/starship.toml ~/.config/
-
 	#uncomment pacman settings
 	sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf &>>$INSTLOG
 	sudo sed -i 's/^#Color/Color/' /etc/pacman.conf &>>$INSTLOG
@@ -313,7 +325,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 
 	#Systemd-boot theming
 	FIND="HOOKS=(base systemd autodetect keyboard sd-vconsole modconf block filesystems fsck)"
-	REPLACE="HOOKS=(base systemd plymouth autodetect keyboard sd-vconsole modconf block filesystems fsck)" 
+	REPLACE="HOOKS=(base systemd plymouth autodetect keyboard sd-vconsole modconf block filesystems fsck)"
 	sudo sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
 
 	#needs more testing
@@ -324,14 +336,6 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	sudo plymouth-set-default-theme -R dark-arch
 
 	sudo mkinitcpio -P
-
-	#stopped using grub becuase of the issues on arch
-	#grub theme
-	#https://gitlab.com/VandalByte/darkmatter-grub-theme
-	#sudo cp -r Extras/darkmatter /boot/grub/themes/
-	#echo -e 'GRUB_THEME="/boot/grub/themes/darkmatter/theme.txt"' | sudo tee -a /etc/default/grub &>>$INSTLOG
-	#echo -e 'GRUB_DISABLE_OS_PROBER=false' | sudo tee -a /etc/default/grub &>>$INSTLOG
-	#sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 	#flatpak fix
 	sudo flatpak override --filesystem=xdg-data/themes
@@ -374,11 +378,6 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 		mkdir -p $DEVDIR
 	fi
 
-	#setup atronvim config
-	echo -e "$CNT - Setting up AstroNvim"
-	git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim &>>$INSTLOG
-	git clone --depth 1 https://github.com/bknightInfo/astrovim_files ~/.config/nvim/lua/user &>>$INSTLOG
-
 	#phpstan -- currently not wotking in the aur
 	wget https://github.com/phpstan/phpstan/releases/download/1.10.14/phpstan.phar
 	sudo mkdir -p /usr/share/webapps/bin
@@ -388,13 +387,15 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 	rm phpstan.phar
 
 	#php coding libraries
-	wget -O phpcbf.phar https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar &>>$INSTLOG
+	wget -O phpcbf.phar https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar
 	chmod a+x phpcbf.phar
 	sudo mv phpcbf.phar /usr/local/bin/phpcbf
 
 	sudo sed -i 's/^;extension=mysqli/extension=mysqli/' /etc/php/php.ini &>>$INSTLOG
 	sudo sed -i 's/^;extension=pdo_mysql/extension=pdo_mysql/' /etc/php/php.ini &>>$INSTLOG
 	sudo sed -i 's/^;extension=iconv/extension=iconv/' /etc/php/php.ini &>>$INSTLOG
+
+	~/Documents/MyGitHub/arch_scripts/setup-lemp-arch.sh &>>$INSTLOG
 fi
 
 # Remove orphan files
