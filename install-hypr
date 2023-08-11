@@ -15,6 +15,7 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 # Define the software that would be installed
 #system packages
 install_stage=(
+	grub-btrfs 
 	bluez
 	bluez-utils
 	blueman
@@ -31,11 +32,13 @@ install_stage=(
 	pacman-contrib
 	pamixer
 	pipewire
+	reflector
 	pavucontrol
 	plymouth
 	python-gobject
 	rsync
 	slurp
+	timeshift
 	unzip
 	wget
 	wireplumber
@@ -66,11 +69,11 @@ misc_stage=(
 aur_stage=(
 	fnm
 	grimblast
-	plymouth-theme-dark-arch
 	sddm-git
 	swaync
 	swaylock-effects
 	swww
+	timeshift-autosnap
 	waybar-hyprland-git
 	zsh-autocomplete-git
 	tk
@@ -92,17 +95,17 @@ development_stage=(
 
 # feel free to add more flatpaks.
 flatpak_stage=(
-	com.brave.Browser
 	com.github.tchx84.Flatseal
 	io.github.celluloid_player.Celluloid
-	io.gitlab.librewolf-community
 	org.gnome.FileRoller
 	org.gnome.Loupe
 	org.libreoffice.LibreOffice
 )
 
 aur_applications=(
+	brave-bin
 	cava
+	firefox-bin
 	noto-fonts
 	noto-fonts-cjk
 	noto-fonts-emoji
@@ -112,7 +115,6 @@ aur_applications=(
 	spotify-edge
 	thunar
 	playerctl
-	unimatrix
 )
 
 #My top 5 favorate nerd fonts
@@ -217,6 +219,9 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 		remove_software $SOFTWR
 	done
 
+	# Add flathub repo
+	flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo &>>$INSTLOGpa
+
 	# Stage flatpak
 	echo -e "$CNT - installing flatpak applications"
 	for SOFTWR in ${flatpak_stage[@]}; do
@@ -231,6 +236,12 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	# Enable the Bluetooth service
 	echo -e "$CNT - Activating Bluetooth Services...\n"
 	sudo systemctl enable --now bluetooth.service &>>$INSTLOG
+	sleep 2
+
+		# Enable the reflector mirror update service
+	echo -e "$CNT - Timer Services...\n"
+	sudo systemctl enable reflector.timer &>>$INSTLOG
+	sudo systemctl enable fstrim.timer &>>$INSTLOG
 	sleep 2
 fi
 
@@ -323,19 +334,28 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	gsettings set org.gnome.desktop.interface icon-theme "Miya-black-dark" &>>$INSTLOG
 	gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors &>>$INSTLOG
 
+	#grub theme
+	sudo cp -r Extras/darkmatter /boot/grub/themes/
+	FIND="#GRUB_DISABLE_OS_PROBER=false"
+	REPLACE="GRUB_DISABLE_OS_PROBER=false"
+	sudo sed -i "s/$FIND/$REPLACE/g" /etc/default/grub &>>$INSTLOG
+
+	echo 'GRUB_THEME="/boot/grub/themes/dark-matter/theme.txt"' | sudo tee -a /etc/default/grub &>>$INSTLOG
+	sudo grub-mkconfig -o /boot/grub/grub.cfg
+
 	#Systemd-boot theming
-	FIND="HOOKS=(base systemd autodetect keyboard sd-vconsole modconf block filesystems fsck)"
-	REPLACE="HOOKS=(base systemd plymouth autodetect keyboard sd-vconsole modconf block filesystems fsck)"
-	sudo sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
+	# FIND="HOOKS=(base systemd autodetect keyboard sd-vconsole modconf block filesystems fsck)"
+	# REPLACE="HOOKS=(base systemd plymouth autodetect keyboard sd-vconsole modconf block filesystems fsck)"
+	# sudo sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
 
 	#needs more testing
 	#FIND="options initrd=initramfs-linux.img"
 	#REPLACE="options initrd=initramfs-linux.img quiet splash vt.global_cursor_default=0"
 	#sudo sed -i "s/$FIND/$REPLACE/g" /boot/loader/entries/arch-linux.conf
 
-	sudo plymouth-set-default-theme -R dark-arch
+	# sudo plymouth-set-default-theme -R dark-arch
 
-	sudo mkinitcpio -P
+	# sudo mkinitcpio -P
 
 	#flatpak fix
 	sudo flatpak override --filesystem=xdg-data/themes
@@ -395,7 +415,7 @@ if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 	sudo sed -i 's/^;extension=pdo_mysql/extension=pdo_mysql/' /etc/php/php.ini &>>$INSTLOG
 	sudo sed -i 's/^;extension=iconv/extension=iconv/' /etc/php/php.ini &>>$INSTLOG
 
-	~/Documents/MyGitHub/arch_scripts/setup-lemp-arch.sh &>>$INSTLOG
+	~/Documents/MyGitHub/my-scripts/setup-lemp-arch.sh &>>$INSTLOG
 fi
 
 # Remove orphan files
@@ -404,4 +424,11 @@ rm .bash*
 rm .wget-hsts
 sudo pacman -Rns --noconfirm $(pacman -Qtdq)
 
-echo -e "\n$CNT - Reboot to finish installation"
+echo "     _                   "
+echo "  __| | ___  _ __   ___  "
+echo " / _' |/ _ \| '_ \ / _ \ "
+echo "| (_| | (_) | | | |  __/ "
+echo " \__,_|\___/|_| |_|\___| "
+echo "                         "
+echo ""
+echo "Please exit & shutdown (shutdown -h now), remove the installation media and start again."
