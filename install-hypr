@@ -15,7 +15,6 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 # Define the software that would be installed
 #system packages
 install_stage=(
-	grub-btrfs 
 	bluez
 	bluez-utils
 	blueman
@@ -38,7 +37,6 @@ install_stage=(
 	python-gobject
 	rsync
 	slurp
-	timeshift
 	unzip
 	wget
 	wireplumber
@@ -73,7 +71,6 @@ aur_stage=(
 	swaync
 	swaylock-effects
 	swww
-	timeshift-autosnap
 	waybar-hyprland-git
 	zsh-autocomplete-git
 	tk
@@ -271,6 +268,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/swaylock ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/cava ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/waybar ~/.config
+        ln -s $HOME/Documents/MyGitHub/my-dots/Config/waybar ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/zsh ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/starship.toml ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/.zshrc ~/
