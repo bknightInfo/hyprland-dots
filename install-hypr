@@ -20,10 +20,12 @@ install_stage=(
 	blueman
 	cliphist
 	cronie
-	gcc12
+        duf
+ 	gcc12
 	grim
 	gtk3
 	gvfs
+        grub-btrfs
 	hyprland
 	mako
 	network-manager-applet
@@ -33,7 +35,6 @@ install_stage=(
 	pipewire
 	reflector
 	pavucontrol
-	plymouth
 	python-gobject
 	rsync
 	slurp
@@ -268,7 +269,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/swaylock ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/cava ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/waybar ~/.config
-        ln -s $HOME/Documents/MyGitHub/my-dots/Config/waybar ~/.config
+        ln -s $HOME/Documents/MyGitHub/my-dots/Config/wofi ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/zsh ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/starship.toml ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/.zshrc ~/
