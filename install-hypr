@@ -67,7 +67,6 @@ misc_stage=(
 )
 
 aur_stage=(
-	spdlog-git
 	fnm-bin
 	grimblast
 	sddm-git
@@ -200,7 +199,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	#fix needed for waybar-hyprland
 	export CC=gcc-12 CXX=g++-12
 	sudo pacman -R spdlog
-	paru -R spdlog-git
+	paru -S spdlog-git
 
 	# Stage AUR - AUR applications
 	echo -e "$CNT - Installing AUR system tools, this may take a while..."
