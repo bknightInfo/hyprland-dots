@@ -297,7 +297,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 		sudo mkdir $WLDIR
 	fi
 
-	BACKUPD=~/.local/bin/
+	BACKUPD=~/.local/share/bin/
 	if [ ! -d "$BACKUPD" ]; then
 		mkdir $BACKUPD
 	fi
