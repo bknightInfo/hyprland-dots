@@ -20,12 +20,12 @@ install_stage=(
 	blueman
 	cliphist
 	cronie
-        duf
+	duf
  	gcc12
 	grim
 	gtk3
 	gvfs
-        grub-btrfs
+	kitty
 	hyprland
 	mako
 	network-manager-applet
@@ -53,6 +53,7 @@ misc_stage=(
 	capitaine-cursors
 	exa
 	flatpak
+	thunar
 	polkit-gnome
 	foot
 	fzf
@@ -66,7 +67,8 @@ misc_stage=(
 )
 
 aur_stage=(
-	fnm
+	spdlog-git
+	fnm-bin
 	grimblast
 	sddm-git
 	swaync
@@ -93,17 +95,17 @@ development_stage=(
 
 # feel free to add more flatpaks.
 flatpak_stage=(
+	com.brave.Browser
 	com.github.tchx84.Flatseal
 	io.github.celluloid_player.Celluloid
+	org.mozilla.firefox
 	org.gnome.FileRoller
 	org.gnome.Loupe
 	org.libreoffice.LibreOffice
 )
 
 aur_applications=(
-	brave-bin
-	cava
-	firefox-bin
+	cava-git
 	noto-fonts
 	noto-fonts-cjk
 	noto-fonts-emoji
@@ -111,7 +113,6 @@ aur_applications=(
 	sddm-config-editor-git
 	solaar
 	spotify-edge
-	thunar
 	playerctl
 )
 
@@ -198,6 +199,8 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 
 	#fix needed for waybar-hyprland
 	export CC=gcc-12 CXX=g++-12
+	sudo pacman -R spdlog
+	paru -R spdlog-git
 
 	# Stage AUR - AUR applications
 	echo -e "$CNT - Installing AUR system tools, this may take a while..."
@@ -262,6 +265,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 
 	# setting defaults config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/foot ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/kitty ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/gtk-3.0 ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/hypr ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/neofetch ~/.config
@@ -269,7 +273,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/swaylock ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/cava ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/waybar ~/.config
-        ln -s $HOME/Documents/MyGitHub/my-dots/Config/wofi ~/.config
+    ln -s $HOME/Documents/MyGitHub/my-dots/Config/wofi ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/zsh ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/starship.toml ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/.zshrc ~/
@@ -300,7 +304,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	fi
 
 	### install custom powermenu script ###
-	cp -p Extras/powermenu.py ~/.local/bin/powermenu
+	cp -p Extras/powermenu.py ~/.local/share/bin/powermenu
 	chmod 755 ~/.local/bin/powermenu
 	cp -p Extras/PowerMenu.desktop ~/.local/share/applications/PowerMenu.desktop
 
@@ -339,22 +343,8 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	REPLACE="GRUB_DISABLE_OS_PROBER=false"
 	sudo sed -i "s/$FIND/$REPLACE/g" /etc/default/grub &>>$INSTLOG
 
-	echo 'GRUB_THEME="/boot/grub/themes/dark-matter/theme.txt"' | sudo tee -a /etc/default/grub &>>$INSTLOG
+	echo 'GRUB_THEME="/boot/grub/themes/darkmatter/theme.txt"' | sudo tee -a /etc/default/grub &>>$INSTLOG
 	sudo grub-mkconfig -o /boot/grub/grub.cfg
-
-	#Systemd-boot theming
-	# FIND="HOOKS=(base systemd autodetect keyboard sd-vconsole modconf block filesystems fsck)"
-	# REPLACE="HOOKS=(base systemd plymouth autodetect keyboard sd-vconsole modconf block filesystems fsck)"
-	# sudo sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
-
-	#needs more testing
-	#FIND="options initrd=initramfs-linux.img"
-	#REPLACE="options initrd=initramfs-linux.img quiet splash vt.global_cursor_default=0"
-	#sudo sed -i "s/$FIND/$REPLACE/g" /boot/loader/entries/arch-linux.conf
-
-	# sudo plymouth-set-default-theme -R dark-arch
-
-	# sudo mkinitcpio -P
 
 	#flatpak fix
 	sudo flatpak override --filesystem=xdg-data/themes
@@ -375,52 +365,51 @@ if [[ $BACKUPCRON == "Y" || $BACKUPCRON == "y" ]]; then
 	if [ ! -d "$BACKUP" ]; then
 		mkdir -p $BACKUP &>>$INSTLOG
 	fi
-	BINDIR=~/.local/bin
+	BINDIR=~/.local/share/bin
 	if [ ! -d "$BINDIR" ]; then
 		mkdir -p $BINDIR &>>$INSTLOG
 	fi
 	cat <<EOF | crontab -
-30 0 * * 7 sh ~/.local/bin/autobackup.sh 
+30 0 * * 7 sh ~/.local/share/bin/autobackup.sh 
 EOF
 fi
 
-read -n1 -rep "${CAT} - Install dev environment(PHP development)? [y/n] " DEVAPP
-if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
-	echo -e "\n$CNT - Installing Dev applications, this may take a while..."
-	for SOFTWR in ${development_stage[@]}; do
-		install_software $AUR $SOFTWR
-	done
+# read -n1 -rep "${CAT} - Install dev environment(PHP development)? [y/n] " DEVAPP
+# if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
+# 	echo -e "\n$CNT - Installing Dev applications, this may take a while..."
+# 	for SOFTWR in ${development_stage[@]}; do
+# 		install_software $AUR $SOFTWR
+# 	done
 
-	DEVDIR=~/Documents/Development/
-	if [ ! -d "$DEVDIR" ]; then
-		echo -e "$CWR - $DEVDIR creating folder..."
-		mkdir -p $DEVDIR
-	fi
+# 	DEVDIR=~/Documents/Development/
+# 	if [ ! -d "$DEVDIR" ]; then
+# 		echo -e "$CWR - $DEVDIR creating folder..."
+# 		mkdir -p $DEVDIR
+# 	fi
 
-	#phpstan -- currently not wotking in the aur
-	wget https://github.com/phpstan/phpstan/releases/download/1.10.14/phpstan.phar
-	sudo mkdir -p /usr/share/webapps/bin
-	sudo cp phpstan.phar /usr/share/webapps/bin/
-	sudo chmod 755 /usr/share/webapps/bin/phpstan.phar
-	sudo ln -s /usr/share/webapps/bin/phpstan.phar /usr/bin/phpstan
-	rm phpstan.phar
+# 	#phpstan -- currently not wotking in the aur
+# 	wget https://github.com/phpstan/phpstan/releases/download/1.10.14/phpstan.phar
+# 	sudo mkdir -p /usr/share/webapps/bin
+# 	sudo cp phpstan.phar /usr/share/webapps/bin/
+# 	sudo chmod 755 /usr/share/webapps/bin/phpstan.phar
+# 	sudo ln -s /usr/share/webapps/bin/phpstan.phar /usr/bin/phpstan
+# 	rm phpstan.phar
 
-	#php coding libraries
-	wget -O phpcbf.phar https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar
-	chmod a+x phpcbf.phar
-	sudo mv phpcbf.phar /usr/local/bin/phpcbf
+# 	#php coding libraries
+# 	wget -O phpcbf.phar https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar
+# 	chmod a+x phpcbf.phar
+# 	sudo mv phpcbf.phar /usr/local/bin/phpcbf
 
-	sudo sed -i 's/^;extension=mysqli/extension=mysqli/' /etc/php/php.ini &>>$INSTLOG
-	sudo sed -i 's/^;extension=pdo_mysql/extension=pdo_mysql/' /etc/php/php.ini &>>$INSTLOG
-	sudo sed -i 's/^;extension=iconv/extension=iconv/' /etc/php/php.ini &>>$INSTLOG
+# 	sudo sed -i 's/^;extension=mysqli/extension=mysqli/' /etc/php/php.ini &>>$INSTLOG
+# 	sudo sed -i 's/^;extension=pdo_mysql/extension=pdo_mysql/' /etc/php/php.ini &>>$INSTLOG
+# 	sudo sed -i 's/^;extension=iconv/extension=iconv/' /etc/php/php.ini &>>$INSTLOG
 
-	~/Documents/MyGitHub/my-scripts/setup-lemp-arch.sh &>>$INSTLOG
-fi
+# 	~/Documents/MyGitHub/my-scripts/setup-lemp-arch.sh &>>$INSTLOG
+# fi
 
 # Remove orphan files
 cd $HOME
 rm .bash*
-rm .wget-hsts
 sudo pacman -Rns --noconfirm $(pacman -Qtdq)
 
 echo "     _                   "
