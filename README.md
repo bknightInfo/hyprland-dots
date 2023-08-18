@@ -20,4 +20,4 @@ cd hyprland-dots
 
 I used mrbman repository (https://github.com/mrbman/hyprland-dotfiles) as a base to start my hyprland my journey.
 
-will always be under constant development 
+My hyprland repository will always be under constant development 
