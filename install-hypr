@@ -67,6 +67,7 @@ misc_stage=(
 )
 
 aur_stage=(
+	brave-bin
 	fnm-bin
 	grimblast
 	sddm-git
@@ -373,6 +374,7 @@ if [[ $BACKUPCRON == "Y" || $BACKUPCRON == "y" ]]; then
 EOF
 fi
 
+# will redo soon
 # read -n1 -rep "${CAT} - Install dev environment(PHP development)? [y/n] " DEVAPP
 # if [[ $DEVAPP == "Y" || $DEVAPP == "y" ]]; then
 # 	echo -e "\n$CNT - Installing Dev applications, this may take a while..."
