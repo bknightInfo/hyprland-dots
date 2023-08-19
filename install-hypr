@@ -49,7 +49,6 @@ install_stage=(
 )
 
 misc_stage=(
-	htop
 	capitaine-cursors
 	exa
 	flatpak
@@ -67,8 +66,7 @@ misc_stage=(
 )
 
 aur_stage=(
-	brave-bin
-	fnm-bin
+	fnm
 	grimblast
 	sddm-git
 	swaync
@@ -87,10 +85,7 @@ remove_stage=(
 development_stage=(
 	compose
 	phpactor
-	neovim
 	npm
-	vscodium-bin
-	vscodium-bin-marketplace
 )
 
 # feel free to add more flatpaks.
@@ -105,6 +100,8 @@ flatpak_stage=(
 
 aur_applications=(
 	cava-git
+        github-desk
+        neovim
 	noto-fonts
 	noto-fonts-cjk
 	noto-fonts-emoji
@@ -113,6 +110,8 @@ aur_applications=(
 	solaar
 	spotify-edge
 	playerctl
+        vscodium-bin
+	vscodium-bin-marketplace
 )
 
 #My top 5 favorate nerd fonts
@@ -308,7 +307,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	cp -p Extras/PowerMenu.desktop ~/.local/share/applications/PowerMenu.desktop
 
 	### backup script ###
-	cp Extras/autobackup.sh ~/.local/bin/
+	cp Extras/autobackup.sh ~/.local/share/bin
 
 	#uncomment pacman settings
 	sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf &>>$INSTLOG
