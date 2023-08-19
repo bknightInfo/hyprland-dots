@@ -100,7 +100,7 @@ flatpak_stage=(
 
 aur_applications=(
 	cava-git
-        github-desk
+        github-desktop-bin
         neovim
 	noto-fonts
 	noto-fonts-cjk
