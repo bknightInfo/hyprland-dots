@@ -95,7 +95,6 @@ development_stage=(
 
 # feel free to add more flatpaks.
 flatpak_stage=(
-	com.brave.Browser
 	com.github.tchx84.Flatseal
 	io.github.celluloid_player.Celluloid
 	org.mozilla.firefox
@@ -273,7 +272,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/swaylock ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/cava ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/waybar ~/.config
-    ln -s $HOME/Documents/MyGitHub/my-dots/Config/wofi ~/.config
+        ln -s $HOME/Documents/MyGitHub/my-dots/Config/wofi ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/zsh ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/starship.toml ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/.zshrc ~/
@@ -420,4 +419,4 @@ echo "| (_| | (_) | | | |  __/ "
 echo " \__,_|\___/|_| |_|\___| "
 echo "                         "
 echo ""
-echo "Please reboot to start hyprland. Enoy"
+echo "Please reboot to start hyprland. Enjoy"
