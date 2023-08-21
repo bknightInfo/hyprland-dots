@@ -15,12 +15,12 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 # Define the software that would be installed
 #system packages
 install_stage=(
+	bat
 	bluez
 	bluez-utils
 	blueman
 	cliphist
 	cronie
-	duf
  	gcc12
 	grim
 	gtk3
@@ -52,9 +52,9 @@ misc_stage=(
 	capitaine-cursors
 	exa
 	flatpak
+	lf
 	thunar
 	polkit-gnome
-	foot
 	fzf
 	gnome-keyring
 	starship
@@ -77,11 +77,6 @@ aur_stage=(
 	tk
 )
 
-remove_stage=(
-	xdg-desktop-portal-gnome
-	xdg-desktop-portal-gtk
-)
-
 development_stage=(
 	compose
 	phpactor
@@ -92,16 +87,16 @@ development_stage=(
 flatpak_stage=(
 	com.github.tchx84.Flatseal
 	io.github.celluloid_player.Celluloid
-	org.mozilla.firefox
 	org.gnome.FileRoller
-	org.gnome.Loupe
 	org.libreoffice.LibreOffice
 )
 
 aur_applications=(
+	brave-bin
 	cava-git
-        github-desktop-bin
-        neovim
+	firefox-bin
+    github-desktop-bin
+    neovim
 	noto-fonts
 	noto-fonts-cjk
 	noto-fonts-emoji
@@ -110,7 +105,7 @@ aur_applications=(
 	solaar
 	spotify-edge
 	playerctl
-        vscodium-bin
+    vscodium-bin
 	vscodium-bin-marketplace
 )
 
@@ -271,10 +266,11 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/swaylock ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/cava ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/waybar ~/.config
-        ln -s $HOME/Documents/MyGitHub/my-dots/Config/wofi ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/wget ~/.config  
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/wofi ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/zsh ~/.config
-	ln -s $HOME/Documents/MyGitHub/my-dots/Config/starship.toml ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/.zshrc ~/
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/starship.toml ~/.config
 
 	#switch to zsh shell
 	chsh -s $(which zsh)
