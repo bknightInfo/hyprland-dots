@@ -350,7 +350,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 fi
 
 
-
+#services
 PS3='Choose your init system: '
 distro=("Systemd" "Dinit" "Quit")
 select init in "${distro[@]}"; do
