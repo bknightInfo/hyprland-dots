@@ -90,7 +90,6 @@ aur_stage=(
 # feel free to add more flatpaks.
 flatpak_stage=(
 	com.github.tchx84.Flatseal
-	com.sublimemerge.App
 	io.github.celluloid_player.Celluloid
 	io.github.TheWisker.Cavasik
 	org.filezillaproject.Filezilla
