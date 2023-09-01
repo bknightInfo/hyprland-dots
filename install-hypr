@@ -33,6 +33,10 @@ install_stage=(
 	pacman-contrib
 	pamixer
 	pipewire
+	pipewire-alsa
+	pipewire-audio
+	pipewire-jack
+	pipewire-pulse
 	reflector
 	pavucontrol
 	python-gobject
@@ -67,35 +71,38 @@ misc_stage=(
 
 aur_stage=(
 	fnm
-	grimblast
+	grimblast-git
 	sddm-git
 	swaync
 	swaylock-effects
 	swww
 	waybar-hyprland-git
 	zsh-autocomplete-git
-	tk
 )
 
-development_stage=(
-	compose
-	phpactor
-	npm
-)
+#ToDo 
+# development_stage=(
+# 	compose
+# 	phpactor
+# 	npm
+# )
 
 # feel free to add more flatpaks.
 flatpak_stage=(
 	com.github.tchx84.Flatseal
+	com.sublimemerge.App
 	io.github.celluloid_player.Celluloid
+	io.github.TheWisker.Cavasik
+	org.filezillaproject.Filezilla
 	org.gnome.FileRoller
+	org.gnome.Lollypop
 	org.libreoffice.LibreOffice
 )
 
+#feel free to modify
 aur_applications=(
 	brave-bin
 	cava-git
-	firefox-bin
-    github-desktop-bin
     neovim
 	noto-fonts
 	noto-fonts-cjk
@@ -214,29 +221,13 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	done
 
 	# Add flathub repo
-	flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo &>>$INSTLOGpa
+	flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo &>>$INSTLOG
 
 	# Stage flatpak
 	echo -e "$CNT - installing flatpak applications"
 	for SOFTWR in ${flatpak_stage[@]}; do
 		flatpak install flathub -y $SOFTWR
 	done
-
-	# Enable the sddm login manager service
-	echo -e "$CNT - Activating sddm Service..."
-	sudo systemctl enable sddm -f &>>$INSTLOG
-	sleep 2
-
-	# Enable the Bluetooth service
-	echo -e "$CNT - Activating Bluetooth Services...\n"
-	sudo systemctl enable --now bluetooth.service &>>$INSTLOG
-	sleep 2
-
-		# Enable the reflector mirror update service
-	echo -e "$CNT - Timer Services...\n"
-	sudo systemctl enable reflector.timer &>>$INSTLOG
-	sudo systemctl enable fstrim.timer &>>$INSTLOG
-	sleep 2
 fi
 
 ### Copy Config Files ###
@@ -260,6 +251,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/foot ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/kitty ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/gtk-3.0 ~/.config
+	ln -s $HOME/Documents/MyGitHub/my-dots/Config/lf ~/.config 
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/hypr ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/neofetch ~/.config
 	ln -s $HOME/Documents/MyGitHub/my-dots/Config/nvim ~/.config
@@ -341,7 +333,11 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 	#flatpak fix
-	sudo flatpak override --filesystem=xdg-data/themes
+	sudo flatpak override --filesystem=$HOME/.local/share/themes
+	sudo flatpak override --filesystem=$HOME/.local/share/icons
+	sudo flatpak override --env=GTK_THEME="Tokyonight-Dark-B"
+	sudo flatpak override --env=ICON_THEME="Miya-black-dark"
+	flatpak uninstall --unused && flatpak repair
 
 	### install nerd fonts
 	mkdir -p ~/.local/share/fonts
@@ -352,6 +348,57 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 	done
 	fc-cache
 fi
+
+
+
+PS3='Choose your init system: '
+distro=("Systemd" "Dinit" "Quit")
+select init in "${distro[@]}"; do
+    case $init in
+        "Systemd")
+            # Enable the sddm login manager service
+			echo -e "$CNT - Activating sddm Service..."
+			sudo systemctl enable sddm -f &>>$INSTLOG
+			sleep 2
+
+			# Enable the Bluetooth service
+			echo -e "$CNT - Activating Bluetooth Services...\n"
+			sudo systemctl enable --now bluetooth.service &>>$INSTLOG
+			sleep 2
+
+			# Enable the reflector mirror update service
+			echo -e "$CNT - Timer Services...\n"
+			sudo systemctl enable reflector.timer &>>$INSTLOG
+			sudo systemctl enable fstrim.timer &>>$INSTLOG
+			sleep 2
+			break
+            ;;
+        "Dinit")
+			# Enable the sddm login manager service
+			echo -e "$CNT - Activating sddm Service..."
+			sudo dinitctl enable sddm -f &>>$INSTLOG
+			sleep 2
+
+			# Enable the Bluetooth service
+			echo -e "$CNT - Activating Bluetooth Services...\n"
+			sudo dinitctl enable --now bluetooth.service &>>$INSTLOG
+			sleep 2
+
+			# Enable the reflector mirror update service
+			echo -e "$CNT - Timer Services...\n"
+			sudo dinitctl enable reflector.timer &>>$INSTLOG
+			sudo dinitctl enable fstrim.timer &>>$INSTLOG
+			sleep 2
+			break
+            ;;
+		"Quit")
+			echo "User requested exit"
+			exit
+			;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+
 
 read -n1 -rep "${CAT} - Install backup script? [y/n] " BACKUPCRON
 if [[ $BACKUPCRON == "Y" || $BACKUPCRON == "y" ]]; then
@@ -403,6 +450,7 @@ fi
 # fi
 
 # Remove orphan files
+
 cd $HOME
 rm .bash*
 sudo pacman -Rns --noconfirm $(pacman -Qtdq)
