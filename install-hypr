@@ -15,6 +15,7 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 # Define the software that would be installed
 #system packages
 install_stage=(
+        ark
 	bat
 	bluez
 	bluez-utils
@@ -92,10 +93,7 @@ aur_stage=(
 flatpak_stage=(
 	com.github.tchx84.Flatseal
         com.spotify.Client
-        com.visualstudio.code
 	io.github.celluloid_player.Celluloid
-	org.filezillaproject.Filezilla
-	org.gnome.FileRoller
 	org.gnome.Lollypop
 	org.libreoffice.LibreOffice
 )
