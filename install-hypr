@@ -92,6 +92,7 @@ aur_stage=(
 flatpak_stage=(
 	com.github.tchx84.Flatseal
         com.spotify.Client
+        com.visualstudio.code
 	io.github.celluloid_player.Celluloid
 	org.filezillaproject.Filezilla
 	org.gnome.FileRoller
@@ -106,8 +107,6 @@ aur_applications=(
     neovim
 	sddm-config-editor-git
 	solaar
-        vscodium-bin
-	vscodium-bin-marketplace
 )
 
 #noto-fonts
