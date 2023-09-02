@@ -59,6 +59,7 @@ misc_stage=(
 	lf
 	thunar
 	polkit-gnome
+        playerctl
 	fzf
 	gnome-keyring
 	starship
@@ -90,8 +91,8 @@ aur_stage=(
 # feel free to add more flatpaks.
 flatpak_stage=(
 	com.github.tchx84.Flatseal
+        com.spotify.Client
 	io.github.celluloid_player.Celluloid
-	io.github.TheWisker.Cavasik
 	org.filezillaproject.Filezilla
 	org.gnome.FileRoller
 	org.gnome.Lollypop
@@ -103,17 +104,16 @@ aur_applications=(
 	brave-bin
 	cava-git
     neovim
-	noto-fonts
-	noto-fonts-cjk
-	noto-fonts-emoji
-	noto-fonts-extra
 	sddm-config-editor-git
 	solaar
-	spotify-edge
-	playerctl
-    vscodium-bin
+        vscodium-bin
 	vscodium-bin-marketplace
 )
+
+#noto-fonts
+#noto-fonts-cjk
+#noto-fonts-emoji
+#noto-fonts-extra
 
 #My top 5 favorate nerd fonts
 nerd_fonts=(
@@ -225,7 +225,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 	# Stage flatpak
 	echo -e "$CNT - installing flatpak applications"
 	for SOFTWR in ${flatpak_stage[@]}; do
-		flatpak install flathub -y $SOFTWR
+		flatpak install --user flathub -y $SOFTWR
 	done
 fi
 
