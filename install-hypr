@@ -15,7 +15,6 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 # Define the software that would be installed
 #system packages
 install_stage=(
-        ark
 	bat
 	bluez
 	bluez-utils
@@ -56,6 +55,7 @@ install_stage=(
 misc_stage=(
 	capitaine-cursors
 	exa
+        nemo-fileroller
 	flatpak
 	lf
 	thunar
